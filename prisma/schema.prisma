@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  activities ActivityLog[]
+}
+
+model Event {
+  id                 Int       @id @default(autoincrement())
+  title              String
+  slug               String    @unique
+  description        String
+  content            String    // Stores MDX content for the event
+  date               DateTime  // The date of the event
+  location           String    // Event location
+  numberOfVolunteers Int?      // Number of volunteers who participated
+  peopleImpacted     Int?      // Number of people impacted by the event
+  duration           Int?      // Duration of the event in hours
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  // Relations
+  activities         ActivityLog[]
+}
+
+model ActivityLog {
+  id          Int       @id @default(autoincrement())
+  action      String    // e.g., "CREATE", "UPDATE", "DELETE"
+  timestamp   DateTime  @default(now())
+  details     String?   // Optional details about the action
+
+  // Foreign keys and relations
+  adminId     Int
+  eventId     Int?
+  admin       Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  event       Event?     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
