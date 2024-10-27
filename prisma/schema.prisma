@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,17 +7,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin {
-  id        Int       @id @default(autoincrement())
+model User {
+  id        String    @id @default(cuid())
   name      String
   email     String    @unique
+  password  String
+  role      Roles    @default(EDITOR)
+  verified  Boolean   @default(false)
+  firstTime Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   activities ActivityLog[]
 }
 
+
+enum Roles {
+  ADMIN
+  EDITOR
+}
+
 model Event {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(cuid())
   title              String
   slug               String    @unique
   description        String
@@ -40,14 +44,14 @@ model Event {
 }
 
 model ActivityLog {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   action      String    // e.g., "CREATE", "UPDATE", "DELETE"
   timestamp   DateTime  @default(now())
   details     String?   // Optional details about the action
 
   // Foreign keys and relations
-  adminId     Int
-  eventId     Int?
-  admin       Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  event       Event?     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId      String
+  eventId     String?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event       Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
