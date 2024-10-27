@@ -5,10 +5,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { email, password } = body;
+  const { name, email, password } = body;
 
   // check if email and password are provided
-  if (!email || !password) {
+  if (!name || !email || !password) {
     return {
       status: 400,
       body: { message: "Email and password are required" },
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     data: {
       email,
       password: hashedPassword,
-      name: "Harshit Sharma",
+      name,
       role: "ADMIN",
     },
   });
