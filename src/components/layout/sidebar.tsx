@@ -1,31 +1,58 @@
 "use client";
 
+import { useTheme } from "next-themes";
+import { signOut, useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import {
   Bell,
   ChevronDown,
   HelpCircle,
   LayoutDashboard,
+  LogOut,
+  Moon,
   Package,
   Search,
   Settings,
+  Sun,
+  User,
   Users,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
-import Image from "next/image";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const { theme, setTheme } = useTheme();
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/auth/login" });
+  };
+
   return (
     <aside className="flex flex-col h-screen w-64 bg-background text-muted-foreground border-r border-border">
-      <div className="p-4 flex items-center justify-between">
+      <div className="p-4 flex items-center justify-between pt-10">
         <h1 className="text-xl font-semibold">Rotaract Admin</h1>
-        <button className="text-muted-foreground hover:text-foreground">
-          <ChevronDown className="h-4 w-4" />
-        </button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        >
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
       </div>
       <div className="px-4 mb-4">
         <div className="relative">
@@ -45,7 +72,6 @@ export default function Sidebar() {
           {[
             { icon: LayoutDashboard, label: "Dashboard", link: "/index" },
             { icon: Package, label: "Events", link: "/events" },
-            // { icon: Package, label: "Inventory", link: "/packages" },
             { icon: Users, label: "Users", link: "/users" },
           ].map((item, index) => (
             <li key={index}>
@@ -101,23 +127,41 @@ export default function Sidebar() {
         </ul>
       </nav>
       <div className="p-4 border-t border-border">
-        <button className="flex items-center space-x-3 w-full">
-          <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-            <Image
-              layout="fill"
-              className="aspect-square h-full w-full"
-              alt="Olivia Williams"
-              src="/placeholder.svg?height=40&width=40"
-            />
-          </span>
-          <div className="flex flex-col items-start">
-            <span className="text-sm font-medium">Olivia Williams</span>
-            <span className="text-xs text-muted-foreground">
-              olivia@example.com
-            </span>
-          </div>
-          <ChevronDown className="h-4 w-4 ml-auto text-muted-foreground" />
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-3 cursor-pointer">
+              <Avatar className="size-8">
+                <AvatarFallback>
+                  {session?.user?.name?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col items-start">
+                <span className="text-sm font-medium">
+                  {session?.user?.name}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {session?.user?.email}
+                </span>
+              </div>
+              <ChevronDown className="size-4 text-muted-foreground" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </aside>
   );

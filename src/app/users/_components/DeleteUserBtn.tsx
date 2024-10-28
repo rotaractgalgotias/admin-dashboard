@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
-import { deleteUserAction } from "./actions";
+import { deleteUserAction } from "../actions";
 
 export default function DeleteUserBtn({ email }: { email: string }) {
   const handleDeleteUser = async ({ email }: { email: string }) => {

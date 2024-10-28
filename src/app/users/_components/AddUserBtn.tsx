@@ -6,7 +6,7 @@ import { UserPlus } from "lucide-react";
 import React, { useState } from "react";
 import { AddUserModal } from "./AddUserModal";
 import { toast } from "sonner";
-import { addUserAction } from "./actions";
+import { addUserAction } from "../actions";
 
 type UserType = Prisma.UserGetPayload<{
   select: {
