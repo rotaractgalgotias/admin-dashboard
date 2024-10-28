@@ -20,6 +20,7 @@ export default function UserDataProvider({
     const getData = async () => {
       const userData = await getUserDataAction(session.user?.email as string);
       if (userData) {
+        console.log(userData);
         setUser(userData);
       }
     };
@@ -29,7 +30,7 @@ export default function UserDataProvider({
     const interval = setInterval(getData, 10000);
 
     return () => clearInterval(interval);
-  }, [session]);
+  }, [session, router, pathname]);
 
   useEffect(() => {
     if (user?.firstTime) router.push("/auth/new");
