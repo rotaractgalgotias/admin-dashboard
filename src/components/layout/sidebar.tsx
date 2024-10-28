@@ -41,6 +41,8 @@ export default function Sidebar() {
     signOut({ callbackUrl: "/auth/login" });
   };
 
+  console.log("pathname", pathname);
+
   return (
     <aside className="flex flex-col h-screen w-64 max-w-64 min-w-64 bg-background text-muted-foreground border-r border-border">
       <div className="p-4 flex items-center justify-between pt-6">
