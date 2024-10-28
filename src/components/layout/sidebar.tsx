@@ -30,6 +30,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { UserProfileSkeleton } from "./UserProfileSkeleton";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -41,7 +42,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="flex flex-col h-screen w-64 bg-background text-muted-foreground border-r border-border">
+    <aside className="flex flex-col h-screen w-64 max-w-64 min-w-64 bg-background text-muted-foreground border-r border-border">
       <div className="p-4 flex items-center justify-between pt-10">
         <h1 className="text-xl font-semibold">Rotaract Admin</h1>
         <Button
@@ -126,43 +127,47 @@ export default function Sidebar() {
           </li>
         </ul>
       </nav>
-      <div className="p-4 border-t border-border">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="flex items-center gap-3 cursor-pointer">
-              <Avatar className="size-8">
-                <AvatarFallback>
-                  {session?.user?.name?.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col items-start">
-                <span className="text-sm font-medium">
-                  {session?.user?.name}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {session?.user?.email}
-                </span>
+      {session ? (
+        <div className="p-4 border-t border-border">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-3 cursor-pointer">
+                <Avatar className="size-8">
+                  <AvatarFallback>
+                    {session?.user?.name?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col items-start">
+                  <span className="text-sm font-medium">
+                    {session?.user?.name}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {session?.user?.email}
+                  </span>
+                </div>
+                <ChevronDown className="size-4 text-muted-foreground" />
               </div>
-              <ChevronDown className="size-4 text-muted-foreground" />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuItem>
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      ) : (
+        <UserProfileSkeleton />
+      )}
     </aside>
   );
 }

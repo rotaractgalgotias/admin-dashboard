@@ -18,19 +18,19 @@ export default async function UsersTable() {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Avatar</TableHead>
+        <TableRow className="">
+          <TableHead className="w-[100px] px-5">Avatar</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Role</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead className="text-right px-5">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {users.map((user) => (
-          <TableRow key={user.id}>
-            <TableCell>
-              <Avatar>
+          <TableRow className="" key={user.id}>
+            <TableCell className="px-5">
+              <Avatar className="">
                 {/* <AvatarImage src={user.avatarUrl} alt={user.name} /> */}
                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
               </Avatar>
