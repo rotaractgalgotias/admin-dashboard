@@ -1,23 +1,9 @@
 import { useState, useEffect } from "react";
-import { Bell, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/stores/userStore";
 import SearchComp from "./SearchComp";
 
 export default function Header() {
   const [greeting, setGreeting] = useState("Hey");
-  const [notifications, setNotifications] = useState([
-    "New user registered",
-    "Event 'Annual Meeting' created",
-    "5 new members joined",
-  ]);
   const { user } = useUserStore();
 
   useEffect(() => {
@@ -54,36 +40,6 @@ export default function Header() {
         </div>
         <div className="flex items-center space-x-4">
           <SearchComp />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-5 w-5" />
-                {notifications.length > 0 && (
-                  <span
-                    className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"
-                    aria-hidden="true"
-                  />
-                )}
-                <span className="sr-only">
-                  Notifications
-                  {notifications.length > 0
-                    ? `, ${notifications.length} unread`
-                    : ""}
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[300px]">
-              {notifications.length > 0 ? (
-                notifications.map((notification, index) => (
-                  <DropdownMenuItem key={index}>
-                    {notification}
-                  </DropdownMenuItem>
-                ))
-              ) : (
-                <DropdownMenuItem>No new notifications</DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     </header>

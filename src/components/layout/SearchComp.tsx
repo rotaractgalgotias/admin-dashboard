@@ -9,29 +9,25 @@ export default function SearchComp() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = React.useState(searchParams.get("q") ?? "");
+  //   const [debouncedValue] = useDebounce(search, 5);
 
-  React.useEffect(() => {
-    setSearch(searchParams.get("q") ?? "");
-  }, [searchParams]);
+  //   React.useEffect(() => {
+  //     setSearch(searchParams.get("q") ?? "");
+  //   }, [searchParams]);
 
-  React.useEffect(() => {
-    if (search === "") {
-      const params = new URLSearchParams(window.location.search);
-      params.delete("q");
-      router.push(`?${params.toString()}`);
-    } else {
-      const params = new URLSearchParams(window.location.search);
-      params.set("q", search);
-      router.push(`?${params.toString()}`);
-    }
-  }, [router, search]);
+  //   React.useEffect(() => {
+  //     const params = new URLSearchParams(window.location.search);
+  //     params.set("q", debouncedValue);
+  //     router.replace(`?${params.toString()}`);
+  //   }, [debouncedValue, router]);
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         const params = new URLSearchParams(window.location.search);
         params.set("q", search);
-        router.push(`?${params.toString()}`);
+        router.replace(`?${params.toString()}`);
       }}
       className="relative"
     >
@@ -43,7 +39,10 @@ export default function SearchComp() {
         id="search"
         type="search"
         placeholder="Search..."
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          router.push(`?q=${e.target.value}`);
+        }}
         value={search}
         className="w-[200px] pl-8 md:w-[300px]"
       />

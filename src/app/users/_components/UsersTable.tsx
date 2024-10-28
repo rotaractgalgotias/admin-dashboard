@@ -12,8 +12,19 @@ import { prisma } from "@/lib/prisma";
 import { Edit } from "lucide-react";
 import DeleteUserBtn from "./DeleteUserBtn";
 
-export default async function UsersTable() {
-  const users = await prisma.user.findMany();
+export default async function UsersTable({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const users = await prisma.user.findMany({
+    where: {
+      name: {
+        contains: searchParams.q as string,
+        mode: "insensitive",
+      },
+    },
+  });
 
   return (
     <Table>
