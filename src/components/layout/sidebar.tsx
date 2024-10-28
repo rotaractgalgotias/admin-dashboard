@@ -8,7 +8,6 @@ import {
   Package,
   Search,
   Settings,
-  ShoppingCart,
   Users,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -45,9 +44,9 @@ export default function Sidebar() {
         <ul className="space-y-1 p-2">
           {[
             { icon: LayoutDashboard, label: "Dashboard", link: "/index" },
-            { icon: ShoppingCart, label: "Orders", link: "/orders" },
-            { icon: Package, label: "Inventory", link: "/packages" },
-            { icon: Users, label: "Customers", link: "/users" },
+            { icon: Package, label: "Events", link: "/events" },
+            // { icon: Package, label: "Inventory", link: "/packages" },
+            { icon: Users, label: "Users", link: "/users" },
           ].map((item, index) => (
             <li key={index}>
               <Link
@@ -77,11 +76,8 @@ export default function Sidebar() {
             >
               <div className="flex items-center space-x-3">
                 <Bell className="h-5 w-5" />
-                <span>Notifications</span>
+                <span>Activity Log</span>
               </div>
-              <span className="bg-destructive text-destructive-foreground text-xs font-medium px-2 py-1 rounded-full">
-                1
-              </span>
             </a>
           </li>
           <li>

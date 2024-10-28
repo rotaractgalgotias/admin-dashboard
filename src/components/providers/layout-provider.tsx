@@ -15,7 +15,7 @@ export default function LayoutProvider({
   return (
     <main className="h-dvh w-full overflow-hidden flex">
       <Sidebar />
-      <div>{children}</div>
+      <div className="p-6 w-full">{children}</div>
     </main>
   );
 }
