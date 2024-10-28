@@ -7,6 +7,7 @@ import LayoutProvider from "@/components/providers/layout-provider";
 import { SessionProvider } from "next-auth/react";
 import UserDataProvider from "@/components/providers/user-data-provider";
 import { Suspense } from "react";
+import TopLoader from "@/components/loaders/Top-Loader";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -44,6 +45,7 @@ export default function RootLayout({
                 // forcedTheme="dark"
                 disableTransitionOnChange
               >
+                <TopLoader />
                 <LayoutProvider>{children}</LayoutProvider>
                 <Toaster />
               </ThemeProvider>

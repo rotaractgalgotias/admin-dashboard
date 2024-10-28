@@ -19,8 +19,6 @@ export const getUserDataAction = async (email: string) => {
       },
     });
 
-    console.log(user);
-
     return user;
   } catch (error) {
     console.error(error);

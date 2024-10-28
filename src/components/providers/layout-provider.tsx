@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import Sidebar from "../layout/sidebar";
 import { usePathname } from "next/navigation";
 import Header from "../layout/Header";
+import Sidebar from "../layout/Sidebar";
 
 export default function LayoutProvider({
   children,

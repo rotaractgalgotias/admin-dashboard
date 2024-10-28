@@ -44,7 +44,9 @@ export default function Sidebar() {
   return (
     <aside className="flex flex-col h-screen w-64 max-w-64 min-w-64 bg-background text-muted-foreground border-r border-border">
       <div className="p-4 flex items-center justify-between pt-6">
-        <h1 className="text-xl font-semibold">Rotaract Admin</h1>
+        <Link href="/">
+          <h1 className="text-xl font-semibold">Rotaract Admin</h1>
+        </Link>
         <Button
           variant="ghost"
           size="icon"

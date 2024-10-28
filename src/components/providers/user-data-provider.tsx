@@ -20,14 +20,13 @@ export default function UserDataProvider({
     const getData = async () => {
       const userData = await getUserDataAction(session.user?.email as string);
       if (userData) {
-        console.log(userData);
         setUser(userData);
       }
     };
 
     getData(); // Initial call to get data immediately
 
-    const interval = setInterval(getData, 10000);
+    const interval = setInterval(getData, 1000);
 
     return () => clearInterval(interval);
   }, [session, router, pathname]);
