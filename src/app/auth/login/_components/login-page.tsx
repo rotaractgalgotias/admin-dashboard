@@ -61,7 +61,9 @@ export function LoginPageComponent() {
         password,
         redirect: false,
       });
-      console.log(response);
+
+      if (response?.error) throw new Error(response.error);
+
       router.push("/");
       toast.success("Logged in successfully", { id: toastId });
     } catch (error) {

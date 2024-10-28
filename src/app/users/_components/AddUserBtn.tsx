@@ -26,6 +26,10 @@ export default function AddUserBtn() {
       const response = await addUserAction(name, email, role);
       if (response.success) {
         toast.success(response.message, { id: toastId });
+        // copy password to clipboard
+        navigator.clipboard.writeText(response.password ?? "");
+        // notify user
+        toast.info("Password copied to clipboard");
       } else {
         throw new Error(response.message);
       }
