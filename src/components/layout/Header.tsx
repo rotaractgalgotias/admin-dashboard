@@ -27,7 +27,7 @@ export default function Header() {
   //    console.log(user);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full flex items-center justify-between px-10 py-6">
         <div className="flex items-center space-x-4">
           <h1 className="text-xl capitalize font-semibold">
