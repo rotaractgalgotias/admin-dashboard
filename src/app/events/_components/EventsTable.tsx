@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import DeleteBtn from "./DeleteBtn";
 
 export async function EventsTable({
   searchParams,
@@ -93,8 +94,8 @@ export async function EventsTable({
                     <Link href={`/events/${event.slug}/edit`}>
                       <DropdownMenuItem>Edit event</DropdownMenuItem>
                     </Link>
-                    <DropdownMenuItem className="text-red-600">
-                      Delete event
+                    <DropdownMenuItem asChild className="text-red-600">
+                      <DeleteBtn id={event.id} name={event.title} />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
