@@ -33,7 +33,7 @@ import { cn } from "@/lib/utils";
 import { UserProfileSkeleton } from "./UserProfileSkeleton";
 
 export default function Sidebar() {
-  // Sidebar component
+  // Sidebar comp
   const pathname = usePathname();
   const { data: session } = useSession();
   const { theme, setTheme } = useTheme();
