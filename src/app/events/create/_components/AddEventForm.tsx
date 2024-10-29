@@ -81,7 +81,11 @@ export function AddEventForm() {
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">Add Event</h2>
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => router.back()}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => router.back()}
+            >
               Discard Changes
             </Button>
             <Button type="submit" disabled={isLoading}>
