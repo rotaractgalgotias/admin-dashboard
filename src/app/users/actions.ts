@@ -1,10 +1,14 @@
 "use server";
+import { UserOnboardingEmailTemplate } from "@/email/User-Onboarding";
 import { prisma } from "@/lib/prisma";
 import { generatePassword } from "@/lib/utils";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { $Enums } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
  * Adds a new user to the database.
@@ -31,7 +35,7 @@ export const addUserAction = async (
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name,
         email,
@@ -39,6 +43,21 @@ export const addUserAction = async (
         password: hashedPassword,
       },
     });
+
+    const { data, error } = await resend.emails.send({
+      from: "Acme <onboarding@admin.rotaractgalgotias.org>",
+      to: [user.email],
+      subject: "Hello world",
+      react: UserOnboardingEmailTemplate({
+        firstName: user.name,
+        email: user.email,
+        temporaryPassword: password,
+      }),
+    });
+
+    if (error) {
+      throw new Error("An error occurred while sending the email");
+    }
 
     return {
       success: true,
