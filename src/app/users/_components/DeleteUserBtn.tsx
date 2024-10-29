@@ -15,9 +15,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useUserStore } from "@/stores/userStore";
 
 export default function DeleteUserBtn({ email }: { email: string }) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const { user } = useUserStore();
   const handleDeleteUser = async ({ email }: { email: string }) => {
     setIsDeleting(true);
     // Implement delete user functionality here
@@ -40,7 +42,12 @@ export default function DeleteUserBtn({ email }: { email: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-destructive">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-destructive"
+          disabled={user?.role !== "ADMIN"}
+        >
           <Trash2 className="h-4 w-4" />
           <span className="sr-only">Delete</span>
         </Button>
@@ -57,11 +64,12 @@ export default function DeleteUserBtn({ email }: { email: string }) {
           <Button
             type="button"
             variant="destructive"
-            onClick={async () =>
+            onClick={async () => {
+              if (user?.role !== "ADMIN") return;
               await handleDeleteUser({
                 email,
-              })
-            }
+              });
+            }}
             disabled={isDeleting}
           >
             {isDeleting ? "Deleting..." : "Delete"}

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { $Enums } from "@prisma/client";
 
 type Store = {
   user: User | null;
@@ -11,7 +12,7 @@ type User = {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: $Enums.Roles;
   firstTime: boolean;
 };
 
