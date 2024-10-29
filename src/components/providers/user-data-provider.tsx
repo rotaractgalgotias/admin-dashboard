@@ -26,7 +26,7 @@ export default function UserDataProvider({
 
     getData(); // Initial call to get data immediately
 
-    const interval = setInterval(getData, 1000);
+    const interval = setInterval(getData, 5000);
 
     return () => clearInterval(interval);
   }, [session, router, pathname]);

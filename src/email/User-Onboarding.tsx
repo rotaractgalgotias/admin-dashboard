@@ -138,7 +138,7 @@ export const UserOnboardingEmailTemplate: React.FC<
           </p>
           <div style={{ textAlign: "center", marginBottom: "30px" }}>
             <a
-              href="https://admin.rotaractgalgotias.org/login"
+              href="https://admin.rotaractgalgotias.org/auth/login"
               style={{
                 display: "inline-block",
                 backgroundColor: "#0066cc",

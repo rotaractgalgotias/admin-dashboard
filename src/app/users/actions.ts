@@ -7,6 +7,7 @@ import { $Enums } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
+import { performance } from "perf_hooks";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -22,17 +23,28 @@ export const addUserAction = async (
   email: string,
   role: $Enums.Roles
 ): Promise<{ success: boolean; message: string; password?: string }> => {
+  const start = performance.now();
   try {
     // Validate input
     if (!name || !email || !role) throw new Error("Please fill all fields");
 
     // Check if user already exists
-    const userExists = await prisma.user.findUnique({ where: { email } });
-    if (userExists) throw new Error("User already exists");
+    const userExists = await prisma.user.count({ where: { email } });
+    if (userExists > 0) throw new Error("User already exists");
+
+    const end = performance.now();
+    console.log(`userExist took ${end - start} milliseconds`);
+
+    const start1 = performance.now();
 
     // Generate and hash password
     const password = generatePassword();
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    const end1 = performance.now();
+    console.log(`password gen took ${end1 - start1} milliseconds`);
+
+    const start2 = performance.now();
 
     // Create user
     const user = await prisma.user.create({
@@ -44,7 +56,12 @@ export const addUserAction = async (
       },
     });
 
-    const { data, error } = await resend.emails.send({
+    const end2 = performance.now();
+    console.log(`user create took ${end2 - start2} milliseconds`);
+
+    const start3 = performance.now();
+    // Send email
+    const { error } = await resend.emails.send({
       from: "Rotaract Galgotias <onboarding@admin.rotaractgalgotias.org>",
       to: [user.email],
       subject: "Welcome to Rotaract Galgotias Admin Panel!",
@@ -55,9 +72,10 @@ export const addUserAction = async (
       }),
     });
 
-    if (error) {
-      throw new Error("An error occurred while sending the email");
-    }
+    const end3 = performance.now();
+    console.log(`email took ${end3 - start3} milliseconds`);
+
+    if (error) throw new Error("An error occurred while sending the email");
 
     return {
       success: true,
@@ -72,8 +90,10 @@ export const addUserAction = async (
         (error as Error).message ?? "An error occurred while adding the user",
     };
   } finally {
+    const end = performance.now();
+    console.log(`addUserAction took ${end - start} milliseconds`);
     revalidatePath("/users");
-    await prisma.$disconnect();
+    // await prisma.$disconnect();
   }
 };
 
@@ -90,8 +110,8 @@ export const deleteUserAction = async (
     if (!email) throw new Error("Please provide an email");
 
     // Check if user exists
-    const userExists = await prisma.user.findUnique({ where: { email } });
-    if (!userExists) throw new Error("User does not exist");
+    const userExists = await prisma.user.count({ where: { email } });
+    if (userExists === 0) throw new Error("User does not exists");
 
     // Delete user
     await prisma.user.delete({ where: { email } });
@@ -109,6 +129,6 @@ export const deleteUserAction = async (
     };
   } finally {
     revalidatePath("/users");
-    await prisma.$disconnect();
+    // await prisma.$disconnect();
   }
 };
