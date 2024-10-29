@@ -33,6 +33,9 @@ export async function EventsTable({
         mode: "insensitive",
       },
     },
+    orderBy: {
+      date: "desc",
+    },
   });
 
   return (
