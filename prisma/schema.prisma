@@ -39,6 +39,7 @@ model Event {
   duration           Int?      // Duration of the event in hours
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
+  coverImage              String
   // Relations
   activities         ActivityLog[]
 }

@@ -26,8 +26,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createEvent } from "../actions";
+// import { createEvent } from "../actions";
 import { toast } from "sonner";
+import { Event } from "@prisma/client";
+import { editEvent } from "../actions";
 
 const eventSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -45,26 +47,30 @@ const eventSchema = z.object({
 
 type EventFormValues = z.infer<typeof eventSchema>;
 
-export function AddEventForm() {
+export function EditEventForm({ event }: { event: Event | null }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<EventFormValues>({
     resolver: zodResolver(eventSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      content: "",
-      location: "",
-      coverImage: "",
+      title: event?.title ?? "",
+      description: event?.description ?? "",
+      content: event?.content ?? "",
+      date: event?.date ?? new Date(),
+      location: event?.location ?? "",
+      numberOfVolunteers: event?.numberOfVolunteers ?? 0,
+      peopleImpacted: event?.peopleImpacted ?? 0,
+      duration: event?.duration ?? 0,
+      coverImage: event?.coverImage ?? "",
     },
   });
 
   const onSubmit = async (data: EventFormValues) => {
     setIsLoading(true);
-    const toastId = toast.loading("Creating event...");
+    const toastId = toast.loading("Saving event...");
 
-    const response = await createEvent(data);
+    const response = await editEvent(event?.id ?? "", data);
 
     if (response.success) {
       toast.success(response.message, { id: toastId });
@@ -79,14 +85,14 @@ export function AddEventForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Add Event</h2>
+          <h2 className="text-2xl font-bold">Edit Event</h2>
           <div className="flex space-x-2">
             <Button variant="outline" onClick={() => router.back()}>
               Discard Changes
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Add Event
+              Save
             </Button>
           </div>
         </div>
@@ -132,7 +138,7 @@ export function AddEventForm() {
                   <FormLabel>Content (Plain Text)</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter event content in Plain Text format"
+                      placeholder="Enter event content in Plain text format"
                       className="min-h-[200px]"
                       {...field}
                     />

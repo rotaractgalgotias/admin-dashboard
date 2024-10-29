@@ -19,6 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
 export async function EventsTable({
   searchParams,
@@ -83,26 +84,13 @@ export async function EventsTable({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem
-                      onClick={() => navigator.clipboard.writeText(event.id)}
-                    >
-                      Copy event ID
-                    </DropdownMenuItem>
+                    <DropdownMenuItem>Copy event ID</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                    // onClick={() => router.push(`/events/${event.slug}`)}
-                    >
-                      View event
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                    // onClick={() => router.push(`/events/${event.slug}/edit`)}
-                    >
-                      Edit event
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      // onClick={() => deleteEvent(event.id)}
-                      className="text-red-600"
-                    >
+                    <DropdownMenuItem>View event</DropdownMenuItem>
+                    <Link href={`/events/${event.slug}/edit`}>
+                      <DropdownMenuItem>Edit event</DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuItem className="text-red-600">
                       Delete event
                     </DropdownMenuItem>
                   </DropdownMenuContent>
