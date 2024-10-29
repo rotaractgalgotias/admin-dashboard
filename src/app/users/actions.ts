@@ -45,9 +45,9 @@ export const addUserAction = async (
     });
 
     const { data, error } = await resend.emails.send({
-      from: "Acme <onboarding@admin.rotaractgalgotias.org>",
+      from: "Rotaract Galgotias <onboarding@admin.rotaractgalgotias.org>",
       to: [user.email],
-      subject: "Hello world",
+      subject: "Welcome to Rotaract Galgotias Admin Panel!",
       react: UserOnboardingEmailTemplate({
         firstName: user.name,
         email: user.email,

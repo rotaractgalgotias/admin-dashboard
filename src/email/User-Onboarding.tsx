@@ -15,7 +15,6 @@ export const UserOnboardingEmailTemplate: React.FC<
       lineHeight: "1.6",
       color: "#333333",
       backgroundColor: "#f4f4f4",
-      padding: "20px",
     }}
   >
     <table
