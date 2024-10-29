@@ -102,15 +102,15 @@ export default function Sidebar() {
             <Separator className="my-3" />
           </div>
           <li>
-            <a
-              href="#"
+            <Link
+              href="/activity-log"
               className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground"
             >
               <div className="flex items-center space-x-3">
                 <Bell className="h-5 w-5" />
                 <span>Activity Log</span>
               </div>
-            </a>
+            </Link>
           </li>
           <li>
             <a

@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { AddUserModal } from "./AddUserModal";
 import { toast } from "sonner";
 import { addUserAction } from "../actions";
+import { useUserStore } from "@/stores/userStore";
 
 type UserType = Prisma.UserGetPayload<{
   select: {
@@ -17,6 +18,7 @@ type UserType = Prisma.UserGetPayload<{
 }>;
 
 export default function AddUserBtn() {
+  const { user } = useUserStore();
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
   const handleAddUser = async (newUser: UserType) => {
@@ -41,6 +43,9 @@ export default function AddUserBtn() {
       setIsAddUserModalOpen(false);
     }
   };
+
+  if (user?.role !== "ADMIN") return null;
+
   return (
     <>
       <Button onClick={() => setIsAddUserModalOpen(true)}>
