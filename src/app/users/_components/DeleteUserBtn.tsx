@@ -35,7 +35,6 @@ export default function DeleteUserBtn({ email }: { email: string }) {
       console.error(error);
       toast.error((error as Error).message, { id: toastId });
     } finally {
-      toast.dismiss(toastId);
       setIsDeleting(false);
     }
   };
