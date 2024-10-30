@@ -45,10 +45,12 @@ export default function Sidebar() {
   console.log("pathname", pathname);
 
   return (
-    <aside className="flex flex-col h-screen w-64 max-w-64 min-w-64 bg-background text-muted-foreground border-r border-border">
+    <aside className="flex flex-col h-screen w-64 max-w-64 min-w-64 bg-accent text-muted-foreground border-r border-border">
       <div className="p-4 flex items-center justify-between pt-6">
         <Link href="/">
-          <h1 className="text-xl font-semibold">Rotaract Admin</h1>
+          <h1 className="text-xl font-semibold text-primary-foreground">
+            Rotaract Admin
+          </h1>
         </Link>
         <Button
           variant="ghost"
@@ -89,9 +91,9 @@ export default function Sidebar() {
               <Link
                 href={item.link === "/index" ? "/" : item.link}
                 className={cn(
-                  "flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground",
+                  "flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-primary text-muted-foreground hover:text-primary-foreground",
                   {
-                    "bg-accent text-accent-foreground":
+                    "bg-primary text-primary-foreground":
                       item.link === "/index"
                         ? pathname === "/"
                         : pathname.startsWith(item.link),

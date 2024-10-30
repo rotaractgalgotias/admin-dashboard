@@ -16,7 +16,7 @@ export default function LayoutProvider({
   return (
     <main className="h-dvh w-full overflow-hidden flex">
       <Sidebar />
-      <div className="w-full min-h-dvh overflow-hidden overflow-y-auto">
+      <div className="w-full min-h-dvh overflow-hidden overflow-y-auto bg-background">
         <Header />
         <div className="p-10 pt-6">{children}</div>
       </div>
