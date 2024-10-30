@@ -7,6 +7,7 @@ This project is a Next.js application configured to use Docker for both the app 
 - **Next.js** for the frontend
 - **Docker** setup for easy deployment and consistent development environments
 - **PostgreSQL** as the database
+- **Prisma** as the ORM
 - **Hot Reloading** for development
 
 ## Prerequisites
@@ -37,12 +38,24 @@ RESEND_API_KEY="<your_resend_api_key>"
 DEPLOY_HOOK="<your_deploy_hook_url>"
 ```
 
-### 3. Build and Run the Docker Containers
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+### 5. Build and Run the Docker Containers
 
 ```bash
 docker-compose up --build
 ```
 
-### 4. Access the Application
+### 6. Access the Application
 
 Open your browser and navigate to `http://localhost:3000` to see the application running.
