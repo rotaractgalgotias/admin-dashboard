@@ -79,6 +79,11 @@ export default function Sidebar() {
             { icon: LayoutDashboard, label: "Dashboard", link: "/index" },
             { icon: Package, label: "Events", link: "/events" },
             { icon: Users, label: "Users", link: "/users" },
+            {
+              icon: Bell,
+              label: "Activity Logs",
+              link: "/activity-logs",
+            },
           ].map((item, index) => (
             <li key={index}>
               <Link
@@ -101,17 +106,7 @@ export default function Sidebar() {
           <div>
             <Separator className="my-3" />
           </div>
-          <li>
-            <Link
-              href="/activity-log"
-              className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground"
-            >
-              <div className="flex items-center space-x-3">
-                <Bell className="h-5 w-5" />
-                <span>Activity Log</span>
-              </div>
-            </Link>
-          </li>
+
           <li>
             <a
               href="#"

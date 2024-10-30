@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 interface LogActionParams {
   action: "CREATE" | "UPDATE" | "DELETE";
@@ -17,6 +18,7 @@ export async function logAction(params: LogActionParams) {
         details,
       },
     });
+    revalidatePath("/activity-logs");
     return {
       success: true,
       message: "Action logged successfully",
