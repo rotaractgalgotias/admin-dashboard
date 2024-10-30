@@ -53,7 +53,7 @@ npx prisma generate
 ### 5. Build and Run the Docker Containers
 
 ```bash
-docker-compose up --build
+docker-compose up -d
 ```
 
 ### 6. Access the Application
