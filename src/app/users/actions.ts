@@ -22,7 +22,12 @@ export const addUserAction = async (
   name: string,
   email: string,
   role: $Enums.Roles
-): Promise<{ success: boolean; message: string; password?: string }> => {
+): Promise<{
+  success: boolean;
+  message: string;
+  password?: string;
+  id?: string;
+}> => {
   const start = performance.now();
   try {
     // Validate input

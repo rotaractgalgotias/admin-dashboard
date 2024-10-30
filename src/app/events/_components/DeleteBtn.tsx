@@ -15,6 +15,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { deleteEventAction } from "../actions";
+import { logAction } from "@/actions/logActions";
+import { useUserStore } from "@/stores/userStore";
 
 export default function DeleteEventBtn({
   id,
@@ -24,6 +26,7 @@ export default function DeleteEventBtn({
   name: string;
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const { user } = useUserStore();
   const handleDeleteUser = async ({ id }: { id: string }) => {
     setIsDeleting(true);
     // Implement delete user functionality here
@@ -40,6 +43,10 @@ export default function DeleteEventBtn({
       toast.error((error as Error).message, { id: toastId });
     } finally {
       setIsDeleting(false);
+      await logAction({
+        action: "DELETE",
+        details: `Event ${name} was deleted by ${user?.name}`,
+      });
     }
   };
   return (

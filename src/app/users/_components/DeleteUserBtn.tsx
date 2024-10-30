@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useUserStore } from "@/stores/userStore";
+import { logAction } from "@/actions/logActions";
 
 export default function DeleteUserBtn({ email }: { email: string }) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -35,6 +36,10 @@ export default function DeleteUserBtn({ email }: { email: string }) {
       console.error(error);
       toast.error((error as Error).message, { id: toastId });
     } finally {
+      await logAction({
+        action: "DELETE",
+        details: `User ${email} was deleted by ${user?.name}`,
+      });
       setIsDeleting(false);
     }
   };

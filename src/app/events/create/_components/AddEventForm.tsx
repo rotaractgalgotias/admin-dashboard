@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/form";
 import { createEvent } from "../actions";
 import { toast } from "sonner";
+import { logAction } from "@/actions/logActions";
+import { useUserStore } from "@/stores/userStore";
 
 const eventSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -48,6 +50,7 @@ type EventFormValues = z.infer<typeof eventSchema>;
 export function AddEventForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const user = useUserStore((state) => state.user);
 
   const form = useForm<EventFormValues>({
     resolver: zodResolver(eventSchema),
@@ -73,6 +76,10 @@ export function AddEventForm() {
       toast.error(response.message, { id: toastId });
     }
     setIsLoading(false);
+    await logAction({
+      action: "CREATE",
+      details: `Event ${data.title} was created by ${user?.name}`,
+    });
   };
 
   return (

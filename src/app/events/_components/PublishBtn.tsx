@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { toast } from "sonner";
 import { publishAction } from "../actions";
+import { logAction } from "@/actions/logActions";
 
 export default function PublishBtn() {
   const [loading, setLoading] = React.useState(false);
+
   const handlePublish = async () => {
     setLoading(true);
     const toastId = toast.loading("Publishing...");
@@ -22,6 +24,10 @@ export default function PublishBtn() {
       console.error(error);
     } finally {
       setLoading(false);
+      await logAction({
+        action: "CREATE",
+        details: `Event was published`,
+      });
     }
   };
   return (

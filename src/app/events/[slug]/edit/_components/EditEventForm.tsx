@@ -30,6 +30,8 @@ import {
 import { toast } from "sonner";
 import { Event } from "@prisma/client";
 import { editEvent } from "../actions";
+import { useUserStore } from "@/stores/userStore";
+import { logAction } from "@/actions/logActions";
 
 const eventSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -50,6 +52,7 @@ type EventFormValues = z.infer<typeof eventSchema>;
 export function EditEventForm({ event }: { event: Event | null }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const user = useUserStore((state) => state.user);
 
   const form = useForm<EventFormValues>({
     resolver: zodResolver(eventSchema),
@@ -79,6 +82,10 @@ export function EditEventForm({ event }: { event: Event | null }) {
       toast.error(response.message, { id: toastId });
     }
     setIsLoading(false);
+    await logAction({
+      action: "UPDATE",
+      details: `Event ${data.title} was updated by ${user?.name}`,
+    });
   };
 
   return (
@@ -87,7 +94,11 @@ export function EditEventForm({ event }: { event: Event | null }) {
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">Edit Event</h2>
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => router.back()}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => router.back()}
+            >
               Discard Changes
             </Button>
             <Button type="submit" disabled={isLoading}>

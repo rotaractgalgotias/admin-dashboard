@@ -17,7 +17,6 @@ model User {
   firstTime Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  activities ActivityLog[]
 }
 
 
@@ -40,19 +39,18 @@ model Event {
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   coverImage              String
-  // Relations
-  activities         ActivityLog[]
 }
 
 model ActivityLog {
   id          String    @id @default(cuid())
-  action      String    // e.g., "CREATE", "UPDATE", "DELETE"
+  action      ActivityActions
   timestamp   DateTime  @default(now())
   details     String?   // Optional details about the action
+}
 
-  // Foreign keys and relations
-  userId      String
-  eventId     String?
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  event       Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+enum ActivityActions {
+  CREATE
+  UPDATE
+  DELETE
 }

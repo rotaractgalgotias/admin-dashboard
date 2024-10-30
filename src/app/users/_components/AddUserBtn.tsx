@@ -8,6 +8,7 @@ import { AddUserModal } from "./AddUserModal";
 import { toast } from "sonner";
 import { addUserAction } from "../actions";
 import { useUserStore } from "@/stores/userStore";
+import { logAction } from "@/actions/logActions";
 
 type UserType = Prisma.UserGetPayload<{
   select: {
@@ -39,8 +40,11 @@ export default function AddUserBtn() {
       console.error(error);
       toast.error((error as Error).message, { id: toastId });
     } finally {
-      toast.dismiss(toastId);
       setIsAddUserModalOpen(false);
+      await logAction({
+        action: "CREATE",
+        details: `User ${newUser.name} was created by ${user?.name}`,
+      });
     }
   };
 
