@@ -5,9 +5,11 @@ import React from "react";
 import { toast } from "sonner";
 import { publishAction } from "../actions";
 import { logAction } from "@/actions/logActions";
+import { useUserStore } from "@/stores/userStore";
 
 export default function PublishBtn() {
   const [loading, setLoading] = React.useState(false);
+  const { user } = useUserStore();
 
   const handlePublish = async () => {
     setLoading(true);
@@ -26,7 +28,7 @@ export default function PublishBtn() {
       setLoading(false);
       await logAction({
         action: "CREATE",
-        details: `Event was published`,
+        details: `Event was published by ${user?.name}`,
       });
     }
   };
