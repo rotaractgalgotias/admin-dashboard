@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { User, Clock, Shield } from 'lucide-react'
+import { Checkbox } from '@radix-ui/react-checkbox'
 
 export function UpdatedUserProfile() {
   const [user, setUser] = useState({
