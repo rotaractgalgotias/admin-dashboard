@@ -47,6 +47,7 @@ export const editEvent = async (
     });
 
     revalidatePath("/events"); // Revalidate the events page after editing an event
+    revalidatePath("/");
 
     return {
       success: true,

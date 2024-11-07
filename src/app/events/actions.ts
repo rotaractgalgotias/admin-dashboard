@@ -22,6 +22,7 @@ export const deleteEventAction = async (eventId: string) => {
       where: { id: eventId },
     });
     revalidatePath("/events");
+    revalidatePath("/");
     return { success: true, message: "Event deleted successfully" };
   } catch (error) {
     console.error(error);

@@ -98,6 +98,7 @@ export const addUserAction = async (
     const end = performance.now();
     console.log(`addUserAction took ${end - start} milliseconds`);
     revalidatePath("/users");
+    revalidatePath("/");
     // await prisma.$disconnect();
   }
 };
@@ -134,6 +135,7 @@ export const deleteUserAction = async (
     };
   } finally {
     revalidatePath("/users");
+    revalidatePath("/");
     // await prisma.$disconnect();
   }
 };

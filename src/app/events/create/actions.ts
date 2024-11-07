@@ -43,6 +43,7 @@ export const createEvent = async (event: {
     });
 
     revalidatePath("/events"); // Revalidate the events page after creating an event
+    revalidatePath("/");
 
     return {
       success: true,

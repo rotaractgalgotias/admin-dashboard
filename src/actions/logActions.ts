@@ -19,6 +19,7 @@ export async function logAction(params: LogActionParams) {
       },
     });
     revalidatePath("/activity-logs");
+    revalidatePath("/");
     return {
       success: true,
       message: "Action logged successfully",
