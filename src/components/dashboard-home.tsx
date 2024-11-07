@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { 
-  Bar, 
-  BarChart, 
   ResponsiveContainer, 
   XAxis, 
   YAxis,
@@ -17,10 +15,8 @@ import {
 import { 
   Users, 
   Calendar, 
-  Clock, 
   Activity,
   UserCheck,
-  FileText,
   AlertCircle,
   CheckCircle2
 } from 'lucide-react'

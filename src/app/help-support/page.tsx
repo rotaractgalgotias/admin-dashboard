@@ -172,8 +172,8 @@ export default function HelpAndSupportPage() {
             <div>
               <h3 className="text-lg font-semibold text-foreground">Need more help?</h3>
               <p className="text-muted-foreground mt-1">
-                If you couldn't find what you were looking for, please don't hesitate to contact our support team.
-                We're here to help!
+                If you couldn{"'"}t find what you were looking for, please don{"'"}t hesitate to contact our support team.
+                We{"'"}re here to help!
               </p>
             </div>
           </div>
