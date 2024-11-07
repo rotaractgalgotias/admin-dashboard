@@ -71,15 +71,15 @@ export function AddEventForm() {
 
     if (response.success) {
       toast.success(response.message, { id: toastId });
+      await logAction({
+        action: "CREATE",
+        details: `Event ${data.title} was created by ${user?.name}`,
+      });
       router.push("/events"); // Redirect to events list after creation
     } else {
       toast.error(response.message, { id: toastId });
     }
     setIsLoading(false);
-    await logAction({
-      action: "CREATE",
-      details: `Event ${data.title} was created by ${user?.name}`,
-    });
   };
 
   return (

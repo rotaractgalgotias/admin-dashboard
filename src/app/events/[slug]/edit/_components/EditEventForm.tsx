@@ -77,15 +77,15 @@ export function EditEventForm({ event }: { event: Event | null }) {
 
     if (response.success) {
       toast.success(response.message, { id: toastId });
+      await logAction({
+        action: "UPDATE",
+        details: `Event ${data.title} was updated by ${user?.name}`,
+      });
       router.push("/events"); // Redirect to events list after creation
     } else {
       toast.error(response.message, { id: toastId });
     }
     setIsLoading(false);
-    await logAction({
-      action: "UPDATE",
-      details: `Event ${data.title} was updated by ${user?.name}`,
-    });
   };
 
   return (

@@ -29,6 +29,10 @@ export default function DeleteUserBtn({ email }: { email: string }) {
       const response = await deleteUserAction(email);
       if (response.success) {
         toast.success(response.message, { id: toastId });
+        await logAction({
+          action: "DELETE",
+          details: `User ${email} was deleted by ${user?.name}`,
+        });
       } else {
         throw new Error(response.message);
       }
@@ -36,10 +40,6 @@ export default function DeleteUserBtn({ email }: { email: string }) {
       console.error(error);
       toast.error((error as Error).message, { id: toastId });
     } finally {
-      await logAction({
-        action: "DELETE",
-        details: `User ${email} was deleted by ${user?.name}`,
-      });
       setIsDeleting(false);
     }
   };

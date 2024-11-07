@@ -33,6 +33,11 @@ export default function AddUserBtn() {
         navigator.clipboard.writeText(response.password ?? "");
         // notify user
         toast.info("Password copied to clipboard");
+
+        await logAction({
+          action: "CREATE",
+          details: `User ${newUser.name} was created by ${user?.name}`,
+        });
       } else {
         throw new Error(response.message);
       }
@@ -41,10 +46,6 @@ export default function AddUserBtn() {
       toast.error((error as Error).message, { id: toastId });
     } finally {
       setIsAddUserModalOpen(false);
-      await logAction({
-        action: "CREATE",
-        details: `User ${newUser.name} was created by ${user?.name}`,
-      });
     }
   };
 
