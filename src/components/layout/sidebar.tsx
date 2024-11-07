@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { UserProfileSkeleton } from "./UserProfileSkeleton";
-import { PersonIcon } from "@radix-ui/react-icons";
 
 export default function Sidebar() {
   // Sidebar comp
@@ -82,9 +81,8 @@ export default function Sidebar() {
             { icon: LayoutDashboard, label: "Dashboard", link: "/index" },
             { icon: Package, label: "Events", link: "/events" },
             { icon: Users, label: "Users", link: "/users" },
-            {icon: Bell,label: "Activity Logs",link: "/activity-logs",},
-            { icon: HelpCircle, label: "Help & Support", link: "/help-support" },
-            ].map((item, index) => (
+            { icon: Bell, label: "Activity Logs", link: "/activity-logs", },
+          ].map((item, index) => (
             <li key={index}>
               <Link
                 href={item.link === "/index" ? "/" : item.link}
@@ -108,22 +106,22 @@ export default function Sidebar() {
           </div>
 
           <li>
-            <a
-              href="#"
+            <Link
+              href="/help-support"
               className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground"
             >
               <HelpCircle className="h-5 w-5" />
               <span>Help & support</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a
-              href="#"
+            <Link
+              href="/settings"
               className="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground"
             >
               <Settings className="h-5 w-5" />
               <span>Settings</span>
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>
@@ -149,34 +147,14 @@ export default function Sidebar() {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                {[
-                  { icon: PersonIcon, label: "Profile", link: "/profile" },
-                ].map((item, profile) => (
-                  <li key={profile}>
-                    <Link
-                      href={item.link === "/profile" ? "/profile" : item.link}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                {[
-                  { icon: PersonIcon, label: "Settings", link: "/settings" },
-                ].map((item, profile) => (
-                  <li key={profile}>
-                    <Link
-                      href={item.link === "/index" ? "/profile" : item.link}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </DropdownMenuItem>
+              <Link
+                href={"/profile"}>
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  Profile
+                </DropdownMenuItem>
+              </Link>
+             
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
