@@ -1,23 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { CalendarIcon, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
+import { logAction } from "@/actions/logActions";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
@@ -26,12 +19,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-// import { createEvent } from "../actions";
-import { toast } from "sonner";
-import { Event } from "@prisma/client";
-import { editEvent } from "../actions";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { useUserStore } from "@/stores/userStore";
-import { logAction } from "@/actions/logActions";
+import { Event } from "@prisma/client";
+import { toast } from "sonner";
+import { editEvent } from "../actions";
 
 const eventSchema = z.object({
   title: z.string().min(1, "Title is required"),

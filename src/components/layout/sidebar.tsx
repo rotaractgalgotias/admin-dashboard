@@ -12,13 +12,11 @@ import {
   LogOut,
   Moon,
   Package,
-  Search,
   Settings,
   Sun,
   User,
   Users,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -62,26 +60,13 @@ export default function Sidebar() {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </div>
-      <div className="px-4 mb-4">
-        <div className="relative">
-          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            className="pl-8 pr-12 bg-transparent text-muted-foreground ring-muted rounded-full"
-            placeholder="Search"
-            type="search"
-          />
-          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-muted-foreground">
-            ⌘F
-          </span>
-        </div>
-      </div>
       <nav className="flex-1">
         <ul className="space-y-1 p-2">
           {[
             { icon: LayoutDashboard, label: "Dashboard", link: "/index" },
             { icon: Package, label: "Events", link: "/events" },
             { icon: Users, label: "Users", link: "/users" },
-            { icon: Bell, label: "Activity Logs", link: "/activity-logs", },
+            { icon: Bell, label: "Activity Logs", link: "/activity-logs" },
           ].map((item, index) => (
             <li key={index}>
               <Link
@@ -147,14 +132,13 @@ export default function Sidebar() {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
-              <Link
-                href={"/profile"}>
+              <Link href={"/profile"}>
                 <DropdownMenuItem>
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </DropdownMenuItem>
               </Link>
-             
+
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
