@@ -30,6 +30,7 @@ import { createEvent } from "../actions";
 import { toast } from "sonner";
 import { logAction } from "@/actions/logActions";
 import { useUserStore } from "@/stores/userStore";
+import Image from "next/image";
 
 const eventSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -276,6 +277,22 @@ export function AddEventForm() {
                 </FormItem>
               )}
             />
+            <div className="w-full bg-accent p-6 rounded-lg">
+              <div className="w-full relative h-64 rounded-lg overflow-hidden">
+                <Image
+                  src={form.watch("coverImage")}
+                  fill
+                  alt={form.watch("title")}
+                  className="rounded-lg object-contain"
+                />
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Note: The event media will be displayed as the main image for
+                the event.
+              </p>
+            </div>
           </div>
         </div>
       </form>
