@@ -20,6 +20,16 @@ export const createEvent = async (event: {
     let slug = slugify(event.title, { lower: true, strict: true });
 
     slug = slug.replace(/^:-/, "");
+
+    const existingEvent = await prisma.event.findUnique({
+      where: { slug },
+    });
+
+    if (existingEvent) {
+      const uniqueSuffix = Date.now().toString();
+      slug = `${slug}-${uniqueSuffix}`;
+    }
+
     const coverImage = event.coverImage ?? "";
 
     const mdxContent = await axios.post(
