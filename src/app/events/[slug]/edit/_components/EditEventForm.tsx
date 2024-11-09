@@ -31,6 +31,7 @@ import { useUserStore } from "@/stores/userStore";
 import { Event } from "@prisma/client";
 import { toast } from "sonner";
 import { editEvent } from "../actions";
+import Image from "next/image";
 
 const eventSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -273,7 +274,7 @@ export function EditEventForm({ event }: { event: Event | null }) {
               name="coverImage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Event Media (Main IMG)</FormLabel>
+                  <FormLabel>Event Media</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter event media URL" {...field} />
                   </FormControl>
@@ -281,6 +282,22 @@ export function EditEventForm({ event }: { event: Event | null }) {
                 </FormItem>
               )}
             />
+            <div className="w-full bg-accent p-6 rounded-lg">
+              <div className="w-full relative h-64 rounded-lg overflow-hidden">
+                <Image
+                  src={form.watch("coverImage")}
+                  fill
+                  alt={form.watch("title")}
+                  className="rounded-lg object-contain"
+                />
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Note: The event media will be displayed as the main image for
+                the event.
+              </p>
+            </div>
           </div>
         </div>
       </form>
