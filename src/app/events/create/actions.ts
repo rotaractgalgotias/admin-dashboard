@@ -17,7 +17,9 @@ export const createEvent = async (event: {
   coverImage: string | null;
 }) => {
   try {
-    const slug = slugify(event.title, { lower: true });
+    let slug = slugify(event.title, { lower: true, strict: true });
+
+    slug = slug.replace(/^:-/, "");
     const coverImage = event.coverImage ?? "";
 
     const mdxContent = await axios.post(
