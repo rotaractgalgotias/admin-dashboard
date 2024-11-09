@@ -90,7 +90,11 @@ export async function EventsTable({
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem>Copy event ID</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>View event</DropdownMenuItem>
+                    <Link
+                      href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/events/${event.slug}`}
+                    >
+                      <DropdownMenuItem>View event</DropdownMenuItem>
+                    </Link>
                     <Link href={`/events/${event.slug}/edit`}>
                       <DropdownMenuItem>Edit event</DropdownMenuItem>
                     </Link>
