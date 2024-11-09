@@ -61,8 +61,8 @@ export default function DeleteEventBtn({
           <DialogTitle>Delete Event</DialogTitle>
           <DialogDescription>
             Are you sure you want to delete the event{" "}
-            <b className="text-primary">{name}</b>? This action cannot be
-            undone.
+            <b className="text-primary-foreground">{name}</b>? This action
+            cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="sm:justify-start">
