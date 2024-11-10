@@ -46,7 +46,7 @@ const Dashboard = async () => {
     activityLogPromise,
   ]);
 
-  const mockData = {
+  const data = {
     stats: {
       totalUsers,
       verifiedUsers,
@@ -80,7 +80,7 @@ const Dashboard = async () => {
       { name: "EDITOR", value: 144 },
     ],
   };
-  return <AdaptiveDashboard data={mockData} />;
+  return <AdaptiveDashboard data={data} />;
 };
 
 function Page() {
