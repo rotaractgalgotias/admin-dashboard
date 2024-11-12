@@ -64,7 +64,7 @@ export async function EventsTable({
             <TableHead className="text-right">
               <Button variant="ghost">Duration (hours)</Button>
             </TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-right pr-6">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -95,7 +95,7 @@ export async function EventsTable({
               <TableCell className="text-center w-16">
                 {event.duration ?? "-"}
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-right pr-6">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
