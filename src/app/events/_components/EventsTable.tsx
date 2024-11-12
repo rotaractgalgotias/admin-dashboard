@@ -21,6 +21,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import DeleteBtn from "./DeleteBtn";
+import Image from "next/image";
 
 export async function EventsTable({
   searchParams,
@@ -44,13 +45,16 @@ export async function EventsTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[200px]">
+            <TableHead className="w-10">
+              <Button variant="ghost">S.No</Button>
+            </TableHead>
+            <TableHead className="w-[300px]">
               <Button variant="ghost">Title</Button>
             </TableHead>
-            <TableHead>
+            <TableHead className="w-48">
               <Button variant="ghost">Date</Button>
             </TableHead>
-            <TableHead>Location</TableHead>
+            <TableHead className="truncate w-48">Location</TableHead>
             <TableHead className="text-right">
               <Button variant="ghost">Volunteers</Button>
             </TableHead>
@@ -64,18 +68,31 @@ export async function EventsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {events.map((event) => (
+          {events.map((event, index) => (
             <TableRow key={event.id}>
-              <TableCell className="font-medium">{event.title}</TableCell>
+              <TableCell className="text-center">{index + 1}</TableCell>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-3">
+                  <div className="size-14 min-w-14 relative rounded-md overflow-hidden">
+                    <Image
+                      src={event.coverImage ?? "/placeholder.jpg"}
+                      alt={event.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <p>{event.title}</p>
+                </div>
+              </TableCell>
               <TableCell>{format(new Date(event.date), "PPP")}</TableCell>
-              <TableCell>{event.location}</TableCell>
-              <TableCell className="text-right">
+              <TableCell className="">{event.location}</TableCell>
+              <TableCell className="text-center w-16">
                 {event.numberOfVolunteers ?? "-"}
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-center w-16">
                 {event.peopleImpacted ?? "-"}
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-center w-16">
                 {event.duration ?? "-"}
               </TableCell>
               <TableCell className="text-right">

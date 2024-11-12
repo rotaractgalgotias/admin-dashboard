@@ -16,6 +16,9 @@ export function EventsTableSkeleton() {
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead className="">
+              <Button variant="ghost">S.No</Button>
+            </TableHead>
             <TableHead className="w-[200px]">
               <Button variant="ghost" disabled>
                 Title
@@ -48,6 +51,9 @@ export function EventsTableSkeleton() {
         <TableBody>
           {Array.from({ length: 10 }).map((_, index) => (
             <TableRow key={index}>
+              <TableCell className="text-center">
+                <Skeleton className="h-5 w-[70px]" />
+              </TableCell>
               <TableCell className="font-medium">
                 <Skeleton className="h-5 w-[180px]" />
               </TableCell>
