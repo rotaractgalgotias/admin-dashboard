@@ -139,3 +139,46 @@ export const deleteUserAction = async (
     // await prisma.$disconnect();
   }
 };
+
+// edit user action
+export const editUserAction = async (
+  name: string,
+  email: string,
+  role: $Enums.Roles
+): Promise<{
+  success: boolean;
+  message: string;
+}> => {
+  try {
+    // Validate input
+    if (!name || !email || !role) throw new Error("Please fill all fields");
+
+    // Check if user already exists
+    const userExists = await prisma.user.count({ where: { email } });
+    if (userExists === 0) throw new Error("User does not exists");
+
+    // Update user
+    await prisma.user.update({
+      where: { email },
+      data: {
+        name,
+        role,
+      },
+    });
+
+    return {
+      success: true,
+      message: "User updated successfully!",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message:
+        (error as Error).message ?? "An error occurred while updating the user",
+    };
+  } finally {
+    revalidatePath("/users");
+    revalidatePath("/");
+  }
+};

@@ -5,7 +5,7 @@ import { Prisma } from "@prisma/client";
 import { EditIcon } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { addUserAction } from "../actions";
+import { editUserAction } from "../actions";
 import { useUserStore } from "@/stores/userStore";
 import { logAction } from "@/actions/logActions";
 import { EditUserModal } from "./EditUserModal";
@@ -29,14 +29,9 @@ export default function EditUserBtn({ userData }: { userData: UserType }) {
     const toastId = toast.loading("Updating user...");
     const { name, email, role } = newUser;
     try {
-      const response = await addUserAction(name, email, role);
+      const response = await editUserAction(name, email, role);
       if (response.success) {
         toast.success(response.message, { id: toastId });
-        // copy password to clipboard
-        navigator.clipboard.writeText(response.password ?? "");
-        // notify user
-        toast.info("Password copied to clipboard");
-
         await logAction({
           action: "UPDATE",
           details: `User ${newUser.name} was updated by ${user?.name}`,
