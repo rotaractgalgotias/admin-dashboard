@@ -1,5 +1,4 @@
 import { MoreHorizontal } from "lucide-react";
-import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +21,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import DeleteBtn from "./DeleteBtn";
 import Image from "next/image";
+import DateComp from "./DateComp";
 
 export async function EventsTable({
   searchParams,
@@ -84,7 +84,7 @@ export async function EventsTable({
                   <p>{event.title}</p>
                 </div>
               </TableCell>
-              <TableCell>{format(new Date(event.date), "PPP")}</TableCell>
+              <DateComp date={event.date} />
               <TableCell className="">{event.location}</TableCell>
               <TableCell className="text-center w-16">
                 {event.numberOfVolunteers ?? "-"}
