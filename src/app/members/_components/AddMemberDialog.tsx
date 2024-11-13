@@ -22,39 +22,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserPlusIcon } from "lucide-react";
-import { MemberType, Position } from "@prisma/client";
-
-const councilPositions = [
-  Position.PRESIDENT,
-  Position.SECRETARY,
-  Position.VICE_PRESIDENT,
-  Position.SERGEANT_AT_ARMS,
-  Position.JOINT_SECRETARY,
-  Position.TREASURER,
-  Position.PUBLIC_RELATION_OFFICER,
-];
-
-const directorAndCoordinatorPositions = [
-  Position.CLUB_SERVICE,
-  Position.COMMUNITY_SERVICE,
-  Position.VOCATIONAL_SERVICE,
-  Position.INTERNATIONAL_SERVICE,
-  Position.LITERARY_SERVICE,
-  Position.MULTIMEDIA_SERVICE,
-  Position.PUBLIC_RELATION_SERVICES,
-  Position.PHOTOGRAPHY_SERVICE,
-  Position.SOCIAL_MEDIA,
-  Position.PERFORMING_ARTS_HEAD,
-  Position.TECHNICAL_SERVICES,
-  Position.MANAGEMENT_TEAM_HEAD,
-];
-
-const memberTypes = [
-  MemberType.COUNCIL,
-  MemberType.DIRECTOR,
-  MemberType.COORDINATOR,
-  MemberType.MEMBER,
-];
+import { MemberType, Position, $Enums } from "@prisma/client";
+import {
+  councilPositions,
+  directorAndCoordinatorPositions,
+  memberTypes,
+} from "../../../utils/positions";
+import { toast } from "sonner";
+import { createMember } from "../actions";
+import { logAction } from "@/actions/logActions";
+import { useUserStore } from "@/stores/userStore";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -69,6 +46,7 @@ export default function AddMemberDialog() {
   const [open, setOpen] = useState(false);
   const [availablePositions, setAvailablePositions] = useState<Position[]>([]);
   const [showPositionSelect, setShowPositionSelect] = useState(false);
+  const { user } = useUserStore();
 
   const {
     control,
@@ -115,7 +93,27 @@ export default function AddMemberDialog() {
   }, [memberType, setValue]);
 
   const onSubmit = async (data: FormData) => {
-    console.log(data);
+    const toastId = toast.loading("Adding member...");
+    try {
+      const res = await createMember({
+        name: data.name,
+        imageUrl: data.imageUrl,
+        memberType: data.memberType as $Enums.MemberType,
+        position: data.position as $Enums.Position,
+      });
+      if (res.success) {
+        toast.success(res.message, { id: toastId });
+        await logAction({
+          action: "CREATE",
+          details: `${user?.name} added the member: ${data.name}`,
+        });
+      } else {
+        toast.error(res.message, { id: toastId });
+      }
+    } catch (error) {
+      console.error("Error adding member:", error);
+      toast.error("Error adding member", { id: toastId });
+    }
     setOpen(false);
     reset();
   };
