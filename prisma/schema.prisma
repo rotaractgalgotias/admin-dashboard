@@ -68,6 +68,7 @@ model Member {
 enum MemberType {
   COUNCIL    // Board Council
   DIRECTOR   // Board of Directors
+  COORDINATOR // Coordinator
   MEMBER     // Regular Member
 }
 
@@ -92,4 +93,5 @@ enum Position {
   PERFORMING_ARTS_HEAD
   TECHNICAL_SERVICES
   MANAGEMENT_TEAM_HEAD
+  MEMBER
 }
