@@ -23,6 +23,8 @@ export default function DeleteUserBtn({ email }: { email: string }) {
   const { user } = useUserStore();
   const handleDeleteUser = async ({ email }: { email: string }) => {
     setIsDeleting(true);
+    if (user?.role !== "ADMIN")
+      return toast.error("You are not authorized to perform this action");
     // Implement delete user functionality here
     const toastId = toast.loading("Deleting user...");
     try {
@@ -69,7 +71,6 @@ export default function DeleteUserBtn({ email }: { email: string }) {
             type="button"
             variant="destructive"
             onClick={async () => {
-              if (user?.role !== "ADMIN") return;
               await handleDeleteUser({
                 email,
               });
