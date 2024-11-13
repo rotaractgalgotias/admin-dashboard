@@ -179,7 +179,7 @@ export function EditEventForm({ event }: { event: Event | null }) {
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {field.value
-                            ? format(field.value, "PPP")
+                            ? format(field.value.toISOString(), "PPP")
                             : "Select event date"}
                         </Button>
                       </FormControl>

@@ -60,7 +60,7 @@ export function AddEventForm() {
       description: "",
       content: "",
       location: "",
-      coverImage: "",
+      coverImage: undefined,
     },
   });
 
@@ -82,6 +82,8 @@ export function AddEventForm() {
     }
     setIsLoading(false);
   };
+
+  console.log(form.watch("coverImage"));
 
   return (
     <Form {...form}>
@@ -174,7 +176,7 @@ export function AddEventForm() {
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {field.value
-                            ? format(field.value, "PPP")
+                            ? format(field.value.toISOString(), "PPP")
                             : "Select event date"}
                         </Button>
                       </FormControl>
@@ -277,10 +279,15 @@ export function AddEventForm() {
                 </FormItem>
               )}
             />
+
             <div className="w-full bg-accent p-6 rounded-lg">
               <div className="w-full relative h-64 rounded-lg overflow-hidden">
                 <Image
-                  src={form.watch("coverImage")}
+                  src={
+                    form.watch("coverImage") === undefined
+                      ? "/placeholder.jpg"
+                      : form.watch("coverImage")
+                  }
                   fill
                   alt={form.watch("title")}
                   className="rounded-lg object-contain"
