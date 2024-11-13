@@ -93,7 +93,9 @@ export default function EditMemberDialog({ member }: { member: Member }) {
   }, [memberType, setValue]);
 
   const onSubmit = async (data: FormData) => {
-    const toastId = toast.loading("Adding member...");
+    if (user?.role !== "ADMIN")
+      return toast.error("You are not authorized to perform this action");
+    const toastId = toast.loading("Updating member...");
     try {
       const res = await updateMember({
         data: {
@@ -124,7 +126,7 @@ export default function EditMemberDialog({ member }: { member: Member }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" disabled={user?.role !== "ADMIN"}>
           <PenIcon className="w-4 h-4" />
           <span className="sr-only">Edit</span>
         </Button>

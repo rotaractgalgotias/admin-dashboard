@@ -47,7 +47,7 @@ export default function DeleteMemberDialog({ member }: { member: Member }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" disabled={user?.role !== "ADMIN"}>
           <TrashIcon className="w-4 h-4" />
           <span className="sr-only">Delete</span>
         </Button>

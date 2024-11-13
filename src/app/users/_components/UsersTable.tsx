@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,10 +8,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { prisma } from "@/lib/prisma";
-import { Edit } from "lucide-react";
 import DeleteUserBtn from "./DeleteUserBtn";
 import { auth } from "@/auth";
 import { Badge } from "@/components/ui/badge";
+import EditUserBtn from "./EditUserBtn";
 
 export default async function UsersTable({
   searchParams,
@@ -29,12 +28,6 @@ export default async function UsersTable({
   });
 
   const session = await auth();
-
-  const currentUser = await prisma.user.findUnique({
-    where: {
-      email: session?.user?.email as string,
-    },
-  });
 
   return (
     <Table>
@@ -62,15 +55,14 @@ export default async function UsersTable({
             <TableCell className="text-right">
               {session?.user?.email !== user.email ? (
                 <>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="mr-2"
-                    disabled={currentUser?.role !== "ADMIN"}
-                  >
-                    <Edit className="h-4 w-4" />
-                    <span className="sr-only">Edit</span>
-                  </Button>
+                  <EditUserBtn
+                    userData={{
+                      email: user.email,
+                      id: user.id,
+                      name: user.name,
+                      role: user.role,
+                    }}
+                  />
                   <DeleteUserBtn email={user.email} />
                 </>
               ) : (

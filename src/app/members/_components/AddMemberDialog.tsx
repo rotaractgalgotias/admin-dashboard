@@ -124,7 +124,7 @@ export default function AddMemberDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button disabled={user?.role !== "ADMIN"}>
           <UserPlusIcon className="w-4 h-4 mr-2" />
           Add Member
         </Button>
