@@ -84,7 +84,7 @@ export async function EventsTable({
                   <p>{event.title}</p>
                 </div>
               </TableCell>
-              <TableCell>{format(event.date.toUTCString(), "PPP")}</TableCell>
+              <TableCell>{format(new Date(event.date), "PPP")}</TableCell>
               <TableCell className="">{event.location}</TableCell>
               <TableCell className="text-center w-16">
                 {event.numberOfVolunteers ?? "-"}
