@@ -42,6 +42,11 @@ export const editEvent = async (
       }
     );
 
+    const dateString = event.date;
+    console.log(dateString);
+    const date = new Date(dateString);
+    console.log(date);
+
     await prisma.event.update({
       where: { id },
       data: {
@@ -49,7 +54,7 @@ export const editEvent = async (
         title: event.title,
         content: mdxContent.data.mdxContent,
         description: event.description,
-        date: event.date,
+        date,
         location: event.location,
         numberOfVolunteers: event.numberOfVolunteers,
         peopleImpacted: event.peopleImpacted,
