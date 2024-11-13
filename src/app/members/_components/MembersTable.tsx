@@ -14,24 +14,10 @@ import { prisma } from "@/lib/prisma";
 import { allPositions } from "@/utils/positions";
 
 export default async function MembersTable() {
-  const members = await prisma.member.findMany({
-    where: {
-      memberType: {
-        in: ["COUNCIL", "DIRECTOR"],
-      },
-    },
-  });
-
-  const allMembersOtherThanCouncilAndDirector = await prisma.member.findMany({
-    where: {
-      memberType: {
-        in: ["COORDINATOR", "MEMBER"],
-      },
-    },
-  });
+  const members = await prisma.member.findMany();
 
   const sortedMembers = members.sort((a, b) => {
-    const order = ["COUNCIL", "DIRECTOR", "COORDINATOR"];
+    const order = ["COUNCIL", "DIRECTOR", "COORDINATOR", "MEMBER"];
     const typeComparison =
       order.indexOf(a.memberType) - order.indexOf(b.memberType);
     if (typeComparison !== 0) return typeComparison;
@@ -44,8 +30,6 @@ export default async function MembersTable() {
 
     return 0;
   });
-
-  const data = [...sortedMembers, ...allMembersOtherThanCouncilAndDirector];
   return (
     <div className="border rounded-lg">
       <Table>
@@ -60,7 +44,7 @@ export default async function MembersTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((member, index) => (
+          {sortedMembers.map((member, index) => (
             <TableRow key={member.id}>
               <TableCell className="font-medium text-center">
                 {index + 1}
