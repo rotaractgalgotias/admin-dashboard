@@ -21,15 +21,15 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserPlusIcon } from "lucide-react";
-import { MemberType, Position, $Enums } from "@prisma/client";
+import { PenIcon } from "lucide-react";
+import { MemberType, Position, $Enums, Member } from "@prisma/client";
 import {
   councilPositions,
   directorAndCoordinatorPositions,
   memberTypes,
 } from "../../../utils/positions";
 import { toast } from "sonner";
-import { createMember } from "../actions";
+import { updateMember } from "../actions";
 import { logAction } from "@/actions/logActions";
 import { useUserStore } from "@/stores/userStore";
 
@@ -42,7 +42,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function AddMemberDialog() {
+export default function EditMemberDialog({ member }: { member: Member }) {
   const [open, setOpen] = useState(false);
   const [availablePositions, setAvailablePositions] = useState<Position[]>([]);
   const [showPositionSelect, setShowPositionSelect] = useState(false);
@@ -57,11 +57,11 @@ export default function AddMemberDialog() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      imageUrl: "",
-      memberType: undefined,
-      position: undefined,
+    values: {
+      name: member.name,
+      imageUrl: member.imageUrl,
+      memberType: member.memberType,
+      position: member.position,
     },
   });
 
@@ -93,22 +93,22 @@ export default function AddMemberDialog() {
   }, [memberType, setValue]);
 
   const onSubmit = async (data: FormData) => {
-    if (user?.role !== "ADMIN") {
-      return toast.error("You are not authorized to add members");
-    }
     const toastId = toast.loading("Adding member...");
     try {
-      const res = await createMember({
-        name: data.name,
-        imageUrl: data.imageUrl,
-        memberType: data.memberType as $Enums.MemberType,
-        position: data.position as $Enums.Position,
+      const res = await updateMember({
+        data: {
+          id: member.id,
+          name: data.name,
+          imageUrl: data.imageUrl,
+          memberType: data.memberType as $Enums.MemberType,
+          position: data.position as $Enums.Position,
+        },
       });
       if (res.success) {
         toast.success(res.message, { id: toastId });
         await logAction({
-          action: "CREATE",
-          details: `${user?.name} added the member: ${data.name}`,
+          action: "UPDATE",
+          details: `${user?.name} updated the member: ${data.name}`,
         });
       } else {
         toast.error(res.message, { id: toastId });
@@ -124,9 +124,9 @@ export default function AddMemberDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <UserPlusIcon className="w-4 h-4 mr-2" />
-          Add Member
+        <Button variant="ghost" size="icon">
+          <PenIcon className="w-4 h-4" />
+          <span className="sr-only">Edit</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -217,7 +217,7 @@ export default function AddMemberDialog() {
             </div>
           )}
           <Button type="submit" className="mt-4">
-            Add Member
+            Submit
           </Button>
         </form>
       </DialogContent>

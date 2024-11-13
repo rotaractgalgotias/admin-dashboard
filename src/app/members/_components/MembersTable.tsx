@@ -8,10 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PenIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import MemberTypeBadge from "./MemberTypeBadge";
 import { prisma } from "@/lib/prisma";
 import { allPositions } from "@/utils/positions";
+import EditMemberDialog from "./EditMemberDialog";
 
 export default async function MembersTable() {
   const members = await prisma.member.findMany();
@@ -62,10 +63,7 @@ export default async function MembersTable() {
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Button variant="ghost" size="icon">
-                    <PenIcon className="w-4 h-4" />
-                    <span className="sr-only">Edit</span>
-                  </Button>
+                  <EditMemberDialog member={member} />
                   <Button variant="ghost" size="icon">
                     <TrashIcon className="w-4 h-4" />
                     <span className="sr-only">Delete</span>
