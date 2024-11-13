@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -47,13 +47,8 @@ export default function DeleteMemberDialog({ member }: { member: Member }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-destructive"
-          disabled={user?.role !== "ADMIN"}
-        >
-          <Trash2 className="h-4 w-4" />
+        <Button variant="ghost" size="icon">
+          <TrashIcon className="w-4 h-4" />
           <span className="sr-only">Delete</span>
         </Button>
       </DialogTrigger>
@@ -61,7 +56,8 @@ export default function DeleteMemberDialog({ member }: { member: Member }) {
         <DialogHeader>
           <DialogTitle>Delete Member</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete the member {member.name}? This
+            Are you sure you want to delete the member{" "}
+            <span className="text-primary-foreground">{member.name}</span>? This
             action cannot be undone.
           </DialogDescription>
         </DialogHeader>
