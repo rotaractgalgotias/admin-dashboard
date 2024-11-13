@@ -66,8 +66,8 @@ export default function Sidebar() {
           {[
             { icon: LayoutDashboard, label: "Dashboard", link: "/index" },
             { icon: Package, label: "Events", link: "/events" },
-            { icon: Users, label: "Users", link: "/users" },
             { icon: GraduationCapIcon, label: "Members", link: "/members" },
+            { icon: Users, label: "Users", link: "/users" },
             { icon: Bell, label: "Activity Logs", link: "/activity-logs" },
           ].map((item, index) => (
             <li key={index}>
