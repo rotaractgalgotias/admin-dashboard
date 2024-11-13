@@ -45,7 +45,7 @@ export const createEvent = async (event: {
         title: event.title,
         content: mdxContent.data.mdxContent,
         description: event.description,
-        date: event.date,
+        date: event.date.toISOString(),
         location: event.location,
         numberOfVolunteers: event.numberOfVolunteers,
         peopleImpacted: event.peopleImpacted,
