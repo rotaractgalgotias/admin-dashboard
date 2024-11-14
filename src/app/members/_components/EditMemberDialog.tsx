@@ -46,7 +46,15 @@ export default function EditMemberDialog({
   member,
 }: {
   member: Prisma.MemberGetPayload<{
-    include: { roles: { include: { year: true } } };
+    include: {
+      roles: {
+        where: {
+          year: {
+            year: number;
+          };
+        };
+      };
+    };
   }>;
 }) {
   const [open, setOpen] = useState(false);
@@ -66,13 +74,9 @@ export default function EditMemberDialog({
     values: {
       name: member.name,
       imageUrl: member.imageUrl,
-      memberType: member.roles.find(
-        (role) => role.year.year === new Date().getFullYear()
-      )?.memberType as MemberType,
+      memberType: member.roles[0].memberType as MemberType,
 
-      position: member.roles.find(
-        (role) => role.year.year === new Date().getFullYear()
-      )?.position as Position,
+      position: member.roles[0].position as Position,
     },
   });
 

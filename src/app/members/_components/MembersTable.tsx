@@ -17,10 +17,21 @@ import { currentYear } from "@/lib/utils";
 
 export default async function MembersTable() {
   const members = await prisma.member.findMany({
+    where: {
+      roles: {
+        some: {
+          year: {
+            year: currentYear,
+          },
+        },
+      },
+    },
     include: {
       roles: {
-        include: {
-          year: true,
+        where: {
+          year: {
+            year: currentYear,
+          },
         },
       },
     },
@@ -29,30 +40,17 @@ export default async function MembersTable() {
   const sortedMembers = members.sort((a, b) => {
     const order = ["COUNCIL", "DIRECTOR", "COORDINATOR", "MEMBER"];
     const typeComparison =
-      order.indexOf(
-        a.roles?.find((role) => role.year.year === currentYear)?.memberType ??
-          ""
-      ) -
-      order.indexOf(
-        b.roles.find((role) => role.year.year === currentYear)?.memberType ?? ""
-      );
+      order.indexOf(a.roles[0].memberType) -
+      order.indexOf(b.roles[0].memberType);
     if (typeComparison !== 0) return typeComparison;
 
     if (
-      (a.roles.find((role) => role.year.year === currentYear)?.memberType ??
-        "") === "COUNCIL" &&
-      (b.roles.find((role) => role.year.year === currentYear)?.memberType ??
-        "") === "COUNCIL"
+      a.roles[0].memberType === "COUNCIL" &&
+      b.roles[0].memberType === "COUNCIL"
     ) {
       return (
-        allPositions.indexOf(
-          a.roles.find((role) => role.year.year === currentYear)
-            ?.position as Position
-        ) -
-        allPositions.indexOf(
-          b.roles.find((role) => role.year.year === currentYear)
-            ?.position as Position
-        )
+        allPositions.indexOf(a.roles[0]?.position as Position) -
+        allPositions.indexOf(b.roles[0]?.position as Position)
       );
     }
 
@@ -85,16 +83,11 @@ export default async function MembersTable() {
               </TableCell>
               <TableCell className="font-medium">{member.name}</TableCell>
               <TableCell>
-                {member.roles
-                  .find((role) => role.year.year === currentYear)
-                  ?.position.replace(/_/g, " ")}
+                {member.roles[0].position.replace(/_/g, " ")}
               </TableCell>
               <TableCell>
                 <MemberTypeBadge
-                  memberType={
-                    member.roles.find((role) => role.year.year === currentYear)
-                      ?.memberType as MemberType
-                  }
+                  memberType={member.roles[0]?.memberType as MemberType}
                 />
               </TableCell>
               <TableCell className="text-right">
