@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import slugify from "slugify";
 import axios from "axios";
+import { currentYear } from "@/lib/utils";
 
 export const createEvent = async (event: {
   title: string;
@@ -51,6 +52,11 @@ export const createEvent = async (event: {
         peopleImpacted: event.peopleImpacted,
         duration: event.duration,
         coverImage,
+        year: {
+          connect: {
+            year: currentYear,
+          },
+        },
       },
     });
 
