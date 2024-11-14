@@ -12,13 +12,12 @@ model User {
   name      String
   email     String    @unique
   password  String
-  role      Roles    @default(EDITOR)
+  role      Roles     @default(EDITOR)
   verified  Boolean   @default(false)
   firstTime Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
-
 
 enum Roles {
   ADMIN
@@ -36,9 +35,12 @@ model Event {
   numberOfVolunteers Int?      // Number of volunteers who participated
   peopleImpacted     Int?      // Number of people impacted by the event
   duration           Int?      // Duration of the event in hours
+  coverImage         String
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
-  coverImage              String
+
+  yearId             String
+  year               Year     @relation(fields: [yearId], references: [id], onDelete: Cascade)
 }
 
 model ActivityLog {
@@ -48,21 +50,40 @@ model ActivityLog {
   details     String?   // Optional details about the action
 }
 
-
 enum ActivityActions {
   CREATE
   UPDATE
   DELETE
 }
 
+model Year {
+  id      String   @id @default(cuid())
+  year    Int      @unique // Stores the year (e.g., 2024)
+  events  Event[]  // Related events for this year
+  roles   MemberRole[] // Related member roles for this year
+}
+
 model Member {
+  id        String       @id @default(cuid())
+  name      String
+  imageUrl  String       // URL to the member's profile image
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  
+  // New field to relate to the historical roles
+  roles      MemberRole[]
+}
+
+model MemberRole {
   id         String     @id @default(cuid())
-  name       String
-  position   Position
-  imageUrl   String     // URL to the member's profile image
-  memberType MemberType @default(MEMBER)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  position   Position   // Position held by the member for this year
+  memberType MemberType // Type of member (e.g., COUNCIL, DIRECTOR)
+  year       Year       @relation(fields: [yearId], references: [id], onDelete: Cascade)  // Added cascade delete
+  yearId     String
+  member     Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)  // Added cascade delete
+  memberId   String
+
+   @@unique([memberId, yearId]) // Ensure each member has only one role per year
 }
 
 enum MemberType {
@@ -71,7 +92,6 @@ enum MemberType {
   COORDINATOR // Coordinator
   MEMBER     // Regular Member
 }
-
 
 enum Position {
   PRESIDENT

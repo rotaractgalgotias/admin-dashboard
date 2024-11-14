@@ -12,19 +12,47 @@ import { prisma } from "@/lib/prisma";
 import { allPositions } from "@/utils/positions";
 import EditMemberDialog from "./EditMemberDialog";
 import DeleteMemberDialog from "./DeleteMemberDialog";
+import { MemberType, Position } from "@prisma/client";
+import { currentYear } from "@/lib/utils";
 
 export default async function MembersTable() {
-  const members = await prisma.member.findMany();
+  const members = await prisma.member.findMany({
+    include: {
+      roles: {
+        include: {
+          year: true,
+        },
+      },
+    },
+  });
 
   const sortedMembers = members.sort((a, b) => {
     const order = ["COUNCIL", "DIRECTOR", "COORDINATOR", "MEMBER"];
     const typeComparison =
-      order.indexOf(a.memberType) - order.indexOf(b.memberType);
+      order.indexOf(
+        a.roles?.find((role) => role.year.year === currentYear)?.memberType ??
+          ""
+      ) -
+      order.indexOf(
+        b.roles.find((role) => role.year.year === currentYear)?.memberType ?? ""
+      );
     if (typeComparison !== 0) return typeComparison;
 
-    if (a.memberType === "COUNCIL" && b.memberType === "COUNCIL") {
+    if (
+      (a.roles.find((role) => role.year.year === currentYear)?.memberType ??
+        "") === "COUNCIL" &&
+      (b.roles.find((role) => role.year.year === currentYear)?.memberType ??
+        "") === "COUNCIL"
+    ) {
       return (
-        allPositions.indexOf(a.position) - allPositions.indexOf(b.position)
+        allPositions.indexOf(
+          a.roles.find((role) => role.year.year === currentYear)
+            ?.position as Position
+        ) -
+        allPositions.indexOf(
+          b.roles.find((role) => role.year.year === currentYear)
+            ?.position as Position
+        )
       );
     }
 
@@ -56,9 +84,18 @@ export default async function MembersTable() {
                 </Avatar>
               </TableCell>
               <TableCell className="font-medium">{member.name}</TableCell>
-              <TableCell>{member.position.replace(/_/g, " ")}</TableCell>
               <TableCell>
-                <MemberTypeBadge memberType={member.memberType} />
+                {member.roles
+                  .find((role) => role.year.year === currentYear)
+                  ?.position.replace(/_/g, " ")}
+              </TableCell>
+              <TableCell>
+                <MemberTypeBadge
+                  memberType={
+                    member.roles.find((role) => role.year.year === currentYear)
+                      ?.memberType as MemberType
+                  }
+                />
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">

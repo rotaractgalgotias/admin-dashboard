@@ -7,6 +7,7 @@ import {
   directorAndCoordinatorPositions,
 } from "../../utils/positions";
 import { revalidatePath } from "next/cache";
+import { currentYear } from "@/lib/utils";
 
 export async function createMember(data: {
   name: string;
@@ -48,9 +49,18 @@ export async function createMember(data: {
     await prisma.member.create({
       data: {
         name: data.name,
-        position: data.position,
         imageUrl: data.imageUrl,
-        memberType: data.memberType || "MEMBER",
+        roles: {
+          create: {
+            year: {
+              connect: {
+                year: currentYear,
+              },
+            },
+            memberType: data.memberType ?? "MEMBER",
+            position: data.position,
+          },
+        },
       },
     });
 
@@ -112,15 +122,37 @@ export const updateMember = async ({
         throw new Error("Invalid member type");
     }
 
+    const currentYearId = await prisma.year.findFirst({
+      where: {
+        year: currentYear,
+      },
+    });
+
+    if (!currentYearId) {
+      throw new Error("Current year not found");
+    }
+
     await prisma.member.update({
       where: {
         id: data.id,
       },
       data: {
         name: data.name,
-        position: data.position,
         imageUrl: data.imageUrl,
-        memberType: data.memberType,
+        roles: {
+          update: {
+            where: {
+              memberId_yearId: {
+                memberId: data.id,
+                yearId: currentYearId.id,
+              },
+            },
+            data: {
+              memberType: data.memberType,
+              position: data.position,
+            },
+          },
+        },
       },
     });
 
