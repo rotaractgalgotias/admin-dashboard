@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PenIcon } from "lucide-react";
-import { MemberType, Position, $Enums, Member } from "@prisma/client";
+import { MemberType, Position, $Enums, Prisma } from "@prisma/client";
 import {
   councilPositions,
   directorAndCoordinatorPositions,
@@ -42,7 +42,13 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function EditMemberDialog({ member }: { member: Member }) {
+export default function EditMemberDialog({
+  member,
+}: {
+  member: Prisma.MemberGetPayload<{
+    include: { roles: { include: { year: true } } };
+  }>;
+}) {
   const [open, setOpen] = useState(false);
   const [availablePositions, setAvailablePositions] = useState<Position[]>([]);
   const [showPositionSelect, setShowPositionSelect] = useState(false);
@@ -60,8 +66,13 @@ export default function EditMemberDialog({ member }: { member: Member }) {
     values: {
       name: member.name,
       imageUrl: member.imageUrl,
-      memberType: member.memberType,
-      position: member.position,
+      memberType: member.roles.find(
+        (role) => role.year.year === new Date().getFullYear()
+      )?.memberType as MemberType,
+
+      position: member.roles.find(
+        (role) => role.year.year === new Date().getFullYear()
+      )?.position as Position,
     },
   });
 
