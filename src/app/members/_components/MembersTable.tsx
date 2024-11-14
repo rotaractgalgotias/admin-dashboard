@@ -17,15 +17,6 @@ import { currentYear } from "@/lib/utils";
 
 export default async function MembersTable() {
   const members = await prisma.member.findMany({
-    where: {
-      roles: {
-        some: {
-          year: {
-            year: currentYear,
-          },
-        },
-      },
-    },
     include: {
       roles: {
         where: {
