@@ -1,9 +1,9 @@
-name: PostgreSQL Backup and Upload to S3
+name: PostgreSQL Backup and Upload to Supabase Storage
 
 on:
   push:
     branches:
-      - main # Trigger on push to the main branch
+      - main
   schedule:
     - cron: "0 0 * * *" # Cron job that runs every day at midnight (UTC)
 
@@ -15,29 +15,61 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install PostgreSQL 16.x client tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-16
+
       - name: Set up PostgreSQL Dump
         uses: tj-actions/pg-dump@v3.0.1
         with:
-          postgresql_version: "16"
-          database_url: ${{ secrets.DATABASE_URL }} # Use your database URL from secrets
-          path: "./backups/backup-${{ github.run_id }}.sql" # Use a unique filename based on GitHub run ID
+          postgresql_version: "16" # Use PostgreSQL version 16
+          database_url: ${{ secrets.SUPABASE_DATABASE_URL }} # Set this secret in GitHub
+          path: "./backups/backup-${{ github.run_id }}.sql"
           options: "-O"
-
-      - name: Set up AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} # Use your AWS access key from secrets
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # Use your AWS secret access key from secrets
-          aws-region: "us-west-2" # Adjust to your region
 
       - name: Generate Timestamp for Backup Filename
         id: timestamp
-        run: echo "timestamp=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV # Create a timestamp
+        run: echo "timestamp=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
 
-      - name: Upload Backup to S3
+      - name: Set up Node.js for Supabase Storage
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install Supabase Client
+        run: npm install @supabase/supabase-js
+
+      - name: Upload Backup to Supabase Storage
         run: |
-          BACKUP_FILE="./backups/backup-${{ env.timestamp }}.sql"  # Use the generated timestamp
-          aws s3 cp $BACKUP_FILE s3://your-bucket-name/path/to/backup-${{ env.timestamp }}.sql
+          BACKUP_FILE="./backups/backup-${{ env.timestamp }}.sql"
+          node -e "
+            const { createClient } = require('@supabase/supabase-js');
+            const fs = require('fs');
+            const path = require('path');
+
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+            const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+
+            const filePath = path.resolve('$BACKUP_FILE');
+            const file = fs.readFileSync(filePath);
+            const fileName = 'backup-${{ env.timestamp }}.sql';
+
+            supabase
+              .storage
+              .from('backups')  // Replace with your storage bucket name
+              .upload(fileName, file, { contentType: 'application/sql', upsert: true })
+              .then(({ error }) => {
+                if (error) throw error;
+                console.log('File uploaded successfully!');
+              })
+              .catch(err => {
+                console.error('Error uploading file:', err);
+                process.exit(1);
+              });
+          "
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
