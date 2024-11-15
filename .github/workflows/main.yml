@@ -19,7 +19,7 @@ jobs:
         uses: tj-actions/pg-dump@v3.0.1
         with:
           postgresql_version: "16" # Use PostgreSQL version 16
-          database_url: ${{ secrets.SUPABASE_DATABASE_URL }} # Set this secret in GitHub
+          database_url: ${{ secrets.DATABASE_URL }} # Set this secret in GitHub
           path: "./backups/backup-${{ github.run_id }}.sql"
           options: "-O"
 
