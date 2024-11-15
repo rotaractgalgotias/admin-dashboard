@@ -15,9 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create backups directory
-        run: mkdir -p ./backups
-
       - name: Set up PostgreSQL Dump
         uses: tj-actions/pg-dump@v3.0.1
         with:
