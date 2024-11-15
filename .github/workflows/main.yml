@@ -15,12 +15,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+        - name: Create backups directory
+          run: mkdir -p ./backups
+
       - name: Set up PostgreSQL Dump
         uses: tj-actions/pg-dump@v3.0.1
         with:
           postgresql_version: "16" # Use PostgreSQL version 16
           database_url: ${{ secrets.DATABASE_URL }} # Set this secret in GitHub
-          path: "./backups/backup-${{ github.run_id }}.sql"
+          path: "./backups/backup.sql"
           options: "-O"
 
       - name: Generate Timestamp for Backup Filename
@@ -40,7 +43,7 @@ jobs:
 
       - name: Upload Backup to Supabase Storage
         run: |
-          BACKUP_FILE="./backups/backup-${{ env.timestamp }}.sql"
+          BACKUP_FILE="./backups/backup.sql"
           node -e "
             const { createClient } = require('@supabase/supabase-js');
             const fs = require('fs');
