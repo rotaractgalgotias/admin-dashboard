@@ -27,16 +27,16 @@ jobs:
         id: timestamp
         run: echo "timestamp=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          version: 7 # Specify pnpm version
+          node-version: "18" # Specify Node.js version
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install --legacy-peer-deps
 
       - name: Install Supabase Client
-        run: pnpm add @supabase/supabase-js
+        run: npm install @supabase/supabase-js --legacy-peer-deps
 
       - name: Upload Backup to Supabase Storage
         run: |
