@@ -27,44 +27,47 @@ jobs:
         id: timestamp
         run: echo "timestamp=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
 
-      - name: Set up Node.js for Supabase Storage
-        uses: actions/setup-node@v3
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
         with:
-          node-version: "18"
+          version: 7 # Specify pnpm version
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Install Supabase Client
-      run: npm install @supabase/supabase-js --legacy-peer-deps
+        run: pnpm add @supabase/supabase-js
 
-    - name: Upload Backup to Supabase Storage
-      run: |
-        BACKUP_FILE="./backups/backup-${{ env.timestamp }}.sql"
-        node -e "
-          const { createClient } = require('@supabase/supabase-js');
-          const fs = require('fs');
-          const path = require('path');
-          
-          const supabaseUrl = process.env.SUPABASE_URL;
-          const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      - name: Upload Backup to Supabase Storage
+        run: |
+          BACKUP_FILE="./backups/backup-${{ env.timestamp }}.sql"
+          node -e "
+            const { createClient } = require('@supabase/supabase-js');
+            const fs = require('fs');
+            const path = require('path');
+            
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-          const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+            const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
-          const filePath = path.resolve('$BACKUP_FILE');
-          const file = fs.readFileSync(filePath);
-          const fileName = 'backup-${{ env.timestamp }}.sql';
+            const filePath = path.resolve('$BACKUP_FILE');
+            const file = fs.readFileSync(filePath);
+            const fileName = 'backup-${{ env.timestamp }}.sql';
 
-          supabase
-            .storage
-            .from('backups')
-            .upload(fileName, file, { contentType: 'application/sql', upsert: true })
-            .then(({ error }) => {
-              if (error) throw error;
-              console.log('File uploaded successfully!');
-            })
-            .catch(err => {
-              console.error('Error uploading file:', err);
-              process.exit(1);
-            });
-        "
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+            supabase
+              .storage
+              .from('backups')
+              .upload(fileName, file, { contentType: 'application/sql', upsert: true })
+              .then(({ error }) => {
+                if (error) throw error;
+                console.log('File uploaded successfully!');
+              })
+              .catch(err => {
+                console.error('Error uploading file:', err);
+                process.exit(1);
+              });
+          "
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
