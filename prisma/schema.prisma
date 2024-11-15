@@ -59,6 +59,8 @@ enum ActivityActions {
 model Year {
   id      String   @id @default(cuid())
   year    Int      @unique // Stores the year (e.g., 2024)
+  imageUrl String?  // URL to the year's image
+
   events  Event[]  // Related events for this year
   roles   MemberRole[] // Related member roles for this year
 }
