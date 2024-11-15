@@ -3,41 +3,41 @@ name: PostgreSQL Backup and Upload to S3
 on:
   push:
     branches:
-      - main  # Trigger on push to the main branch
+      - main # Trigger on push to the main branch
   schedule:
-    - cron: '0 0 * * *'  # Cron job that runs every day at midnight (UTC)
+    - cron: "0 0 * * *" # Cron job that runs every day at midnight (UTC)
 
 jobs:
   backup:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up PostgreSQL Dump
-      uses: tj-actions/pg-dump@v3.0.1
-      with:
-        postgresql_version: '15'
-        database_url: ${{ secrets.DATABASE_URL }}  # Use your database URL from secrets
-        path: './backups/backup-${{ github.run_id }}.sql'  # Use a unique filename based on GitHub run ID
-        options: '-O'
+      - name: Set up PostgreSQL Dump
+        uses: tj-actions/pg-dump@v3.0.1
+        with:
+          postgresql_version: "16"
+          database_url: ${{ secrets.DATABASE_URL }} # Use your database URL from secrets
+          path: "./backups/backup-${{ github.run_id }}.sql" # Use a unique filename based on GitHub run ID
+          options: "-O"
 
-    - name: Set up AWS CLI
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Use your AWS access key from secrets
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Use your AWS secret access key from secrets
-        aws-region: 'us-west-2'  # Adjust to your region
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} # Use your AWS access key from secrets
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # Use your AWS secret access key from secrets
+          aws-region: "us-west-2" # Adjust to your region
 
-    - name: Generate Timestamp for Backup Filename
-      id: timestamp
-      run: echo "timestamp=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV  # Create a timestamp
+      - name: Generate Timestamp for Backup Filename
+        id: timestamp
+        run: echo "timestamp=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV # Create a timestamp
 
-    - name: Upload Backup to S3
-      run: |
-        BACKUP_FILE="./backups/backup-${{ env.timestamp }}.sql"  # Use the generated timestamp
-        aws s3 cp $BACKUP_FILE s3://your-bucket-name/path/to/backup-${{ env.timestamp }}.sql
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Upload Backup to S3
+        run: |
+          BACKUP_FILE="./backups/backup-${{ env.timestamp }}.sql"  # Use the generated timestamp
+          aws s3 cp $BACKUP_FILE s3://your-bucket-name/path/to/backup-${{ env.timestamp }}.sql
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
