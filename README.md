@@ -31,7 +31,7 @@ cd <your-repo-name>
 Create a `.env` file in the root directory and add the following variables:
 
 ```env
-DATABASE_URL="postgresql://postgres:postgres@db:5432/mydatabase"
+DATABASE_URL="postgresql://postgres:postgres@postgres:5432/mydb?schema=public"
 AUTH_SECRET="<your_auth_secret>"
 AUTH_TRUST_HOST=true
 RESEND_API_KEY="<your_resend_api_key>"
