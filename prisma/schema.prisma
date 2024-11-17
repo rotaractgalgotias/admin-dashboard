@@ -72,9 +72,20 @@ model Member {
   imageUrl  String       // URL to the member's profile image
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+  collegeId String       @default("cm3lmrtyx0000xz75u4u9jg35")
+  college   College      @relation(fields: [collegeId], references: [id])
   
   // New field to relate to the historical roles
   roles      MemberRole[]
+}
+
+model College {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  members    Member[]
 }
 
 model MemberRole {
