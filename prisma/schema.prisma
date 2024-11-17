@@ -91,6 +91,7 @@ model Member {
 model College {
   id        String    @id @default(cuid())
   name      String
+  whatsappGroupLink String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
