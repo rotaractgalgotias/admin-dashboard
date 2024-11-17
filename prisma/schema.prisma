@@ -83,6 +83,7 @@ model Member {
   branch    String?       // Branch of study
   whatsappNumber String? // WhatsApp number
   referralSource String? // How the member heard about the club
+  membershipType String?
   
   // New field to relate to the historical roles
   roles      MemberRole[]
