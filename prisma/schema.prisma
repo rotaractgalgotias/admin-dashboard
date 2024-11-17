@@ -74,7 +74,7 @@ model Member {
   updatedAt DateTime     @updatedAt
   collegeId String       @default("cm3lmrtyx0000xz75u4u9jg35")
   college   College      @relation(fields: [collegeId], references: [id])
-  verified  Boolean      @default(true)
+  verified  Boolean      @default(false)
 
   // New fields to store the member's details
   email     String?
