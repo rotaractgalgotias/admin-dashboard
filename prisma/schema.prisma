@@ -74,6 +74,15 @@ model Member {
   updatedAt DateTime     @updatedAt
   collegeId String       @default("cm3lmrtyx0000xz75u4u9jg35")
   college   College      @relation(fields: [collegeId], references: [id])
+  verified  Boolean      @default(true)
+
+  // New fields to store the member's details
+  email     String?
+  phone     String?
+  year      Int?          // Year the member joined the club
+  branch    String?       // Branch of study
+  whatsappNumber String? // WhatsApp number
+  referralSource String? // How the member heard about the club
   
   // New field to relate to the historical roles
   roles      MemberRole[]
