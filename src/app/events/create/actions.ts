@@ -16,6 +16,7 @@ export const createEvent = async (event: {
   peopleImpacted?: number | null;
   duration?: number | null;
   coverImage: string | null;
+  featured: boolean;
 }) => {
   try {
     let slug = slugify(event.title, { lower: true, strict: true });
@@ -52,6 +53,7 @@ export const createEvent = async (event: {
         peopleImpacted: event.peopleImpacted,
         duration: event.duration,
         coverImage,
+        featured: event.featured,
         year: {
           connect: {
             year: currentYear,

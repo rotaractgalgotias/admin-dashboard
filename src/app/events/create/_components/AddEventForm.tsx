@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -31,6 +32,7 @@ import { toast } from "sonner";
 import { logAction } from "@/actions/logActions";
 import { useUserStore } from "@/stores/userStore";
 import Image from "next/image";
+import { Switch } from "@/components/ui/switch";
 
 const eventSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -44,6 +46,7 @@ const eventSchema = z.object({
   peopleImpacted: z.number().min(0).optional(),
   duration: z.number().min(0).optional(),
   coverImage: z.string().url("Invalid URL"),
+  featured: z.boolean(),
 });
 
 type EventFormValues = z.infer<typeof eventSchema>;
@@ -61,6 +64,7 @@ export function AddEventForm() {
       content: "",
       location: "",
       coverImage: "",
+      featured: false,
     },
   });
 
@@ -150,6 +154,27 @@ export function AddEventForm() {
                     />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="featured"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">Featured Event</FormLabel>
+                    <FormDescription>
+                      Mark this event as featured to highlight it on the main
+                      and sponsor page.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />

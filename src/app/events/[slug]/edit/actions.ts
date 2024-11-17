@@ -17,6 +17,7 @@ export const editEvent = async (
     peopleImpacted?: number | null;
     duration?: number | null;
     coverImage: string | null;
+    featured: boolean;
   }
 ) => {
   try {
@@ -60,6 +61,7 @@ export const editEvent = async (
         peopleImpacted: event.peopleImpacted,
         duration: event.duration,
         coverImage,
+        featured: event.featured,
       },
     });
 
