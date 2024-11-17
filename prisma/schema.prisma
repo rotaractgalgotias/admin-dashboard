@@ -79,7 +79,7 @@ model Member {
   // New fields to store the member's details
   email     String?
   phone     String?
-  year      Int?          // Year the member joined the club
+  year      String?          // Year the member joined the club
   branch    String?       // Branch of study
   whatsappNumber String? // WhatsApp number
   referralSource String? // How the member heard about the club
