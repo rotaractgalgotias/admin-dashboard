@@ -33,7 +33,7 @@ import { Event } from "@prisma/client";
 import { toast } from "sonner";
 import { editEvent } from "../actions";
 import Image from "next/image";
-import { Switch } from "@radix-ui/react-switch";
+import { Switch } from "@/components/ui/switch";
 
 const eventSchema = z.object({
   title: z.string().min(1, "Title is required"),
