@@ -26,6 +26,9 @@ export default async function MembersTable() {
         },
       },
     },
+    where: {
+      verified: true,
+    },
   });
 
   const sortedMembers = members.sort((a, b) => {
