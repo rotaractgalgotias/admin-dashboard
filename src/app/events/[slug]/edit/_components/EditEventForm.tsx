@@ -69,7 +69,7 @@ export function EditEventForm({ event }: { event: Event | null }) {
       peopleImpacted: event?.peopleImpacted ?? 0,
       duration: event?.duration ?? 0,
       coverImage: event?.coverImage ?? "",
-      featured: false,
+      featured: event?.featured ?? false,
     },
   });
 
