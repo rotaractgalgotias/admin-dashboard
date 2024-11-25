@@ -14,6 +14,7 @@ type User = {
   email: string;
   role: $Enums.Roles;
   firstTime: boolean;
+  dummy: boolean | null;
 };
 
 const userStore = create<Store>()((set) => ({
