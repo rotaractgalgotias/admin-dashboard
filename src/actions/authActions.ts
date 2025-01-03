@@ -16,7 +16,6 @@ export const getUserDataAction = async (email: string) => {
         email: true,
         role: true,
         firstTime: true,
-        dummy: true,
       },
     });
 
