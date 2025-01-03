@@ -17,9 +17,6 @@ model User {
   firstTime Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-
-  // making dummy relation to showcase the panel in portfolio
-  dummy Boolean?
 }
 
 enum Roles {
