@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   LogOut,
   Moon,
+  Newspaper,
   Package,
   Settings,
   Sun,
@@ -68,6 +69,7 @@ export default function Sidebar() {
             { icon: Package, label: "Events", link: "/events" },
             { icon: GraduationCapIcon, label: "Members", link: "/members" },
             { icon: Users, label: "Users", link: "/users" },
+            { icon: Newspaper, label: "Newsletter", link: "/newsletter" },
             { icon: Bell, label: "Activity Logs", link: "/activity-logs" },
           ].map((item, index) => (
             <li key={index}>
