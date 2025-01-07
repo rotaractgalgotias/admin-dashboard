@@ -2,36 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { AddNewsletterDialog } from "./_components/add-newsletter-dialogue";
+import { prisma } from "@/lib/prisma";
+import { EditNewsletterDialog } from "./_components/EditNewsletter";
 
-// Dummy data
-const dummyNewsletters = [
-  {
-    id: "1",
-    title: "January Newsletter",
-    content: "January content here",
-    news: "Latest updates",
-    date: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    coverImage: "/images/january.jpg",
-    month: "January",
-    totalPages: 10,
-  },
-  {
-    id: "2",
-    title: "February Newsletter",
-    content: "February content here",
-    news: "Latest updates",
-    date: new Date(),
-    createdAt: new Date(2024, 1, 15),
-    updatedAt: new Date(),
-    coverImage: "/images/february.jpg",
-    month: "February",
-    totalPages: 8,
-  },
-];
+export default async function NewsletterPage() {
 
-export default function NewsletterPage() {
+  const newsletters = await prisma.newsletter.findMany()
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -53,23 +30,25 @@ export default function NewsletterPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {dummyNewsletters.map((newsletter) => (
+            {newsletters.map((newsletter) => (
               <TableRow key={newsletter.id}>
                 <TableCell>{newsletter.title}</TableCell>
                 <TableCell>{newsletter.month}</TableCell>
                 <TableCell>{newsletter.totalPages}</TableCell>
                 <TableCell>{format(newsletter.createdAt, "MMM dd, yyyy")}</TableCell>
                 <TableCell>
-                  <Button variant="ghost" size="sm">
-                    Edit
-                  </Button>
+                  <EditNewsletterDialog newsletter={newsletter}>
+                    <Button variant="ghost" size="sm">
+                      Edit
+                    </Button>
+                  </EditNewsletterDialog>
                   <Button variant="ghost" size="sm" className="text-red-500">
                     Delete
                   </Button>
                 </TableCell>
               </TableRow>
             ))}
-            {dummyNewsletters.length === 0 && (
+            {newsletters.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-muted-foreground">
                   No newsletters found. Create one to get started.

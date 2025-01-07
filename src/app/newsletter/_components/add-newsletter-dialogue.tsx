@@ -12,6 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/stores/userStore";
+import { toast } from "sonner";
+import { addNewsletter } from "../action";
+import { logAction } from "@/actions/logActions";
+import { useState } from "react";
 
 interface NewsletterFormValues {
   title: string;
@@ -21,6 +26,7 @@ interface NewsletterFormValues {
 
 export function AddNewsletterDialog({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const { user } = useUserStore();
 
   const {
     register,
@@ -28,10 +34,32 @@ export function AddNewsletterDialog({ children }: { children: React.ReactNode })
     formState: { errors },
   } = useForm<NewsletterFormValues>();
 
-  const onSubmit = (data: NewsletterFormValues) => {
-    console.log(data);
-    // Simulate API request or handle the form data
-    router.refresh();
+  const onSubmit = async (data: NewsletterFormValues) => {
+    if (user?.role !== "ADMIN")
+      return toast.error("You are not authorized to perform this action");
+
+    const toastId = toast.loading("Creating newsletter...");
+
+    try {
+      const response = await addNewsletter(data);
+      if (response.success) {
+        toast.success(response.message, { id: toastId });
+
+        await logAction({
+          action: "CREATE",
+          details: `Newsletter ${data.title} was created by ${user?.name}`,
+        })
+      } else {
+        throw new Error(response.message);
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error((error as Error).message, { id: toastId });
+    } finally {
+      // close the dialog
+      router.replace("/newsletter");
+    }
   };
 
   return (

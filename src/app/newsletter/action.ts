@@ -53,4 +53,60 @@ export async function addNewsletter({
 
 }
 
+export async function deleteNewsletter(id: string) {
+  try {
+    if(!id) throw new Error("id is required")
 
+    const newsletter = await prisma.newsletter.delete({
+      where: { id }
+    })
+
+    return {
+      success: true,
+      message: "Newsletter deleted successfully",
+      data: newsletter
+    }
+    
+  } catch (error) {
+    console.error(error)
+    return { success: false, message: (error as Error).message ?? "An error occurred while deleting the newsletter" }
+    
+  } finally {
+    revalidatePath("/newsletter")
+    revalidatePath("/")
+  }
+}
+
+export async function editNewsletter({
+  title,
+  totalPages,
+  month,
+  id
+}: Newsletter & { id: string }) {
+  try {
+    if(!title || !totalPages || !month || !id) throw new Error("Please fill all fields")
+
+    const newsletter = await prisma.newsletter.update({
+      where: { id },
+      data: {
+        title,
+        totalPages,
+        month
+      }
+    })
+
+    return {
+      success: true,
+      message: "Newsletter updated successfully",
+      data: newsletter
+    }
+    
+  } catch (error) {
+    console.error(error)
+    return { success: false, message: (error as Error).message ?? "An error occurred while updating the newsletter" }
+    
+  } finally {
+    revalidatePath("/newsletter")
+    revalidatePath("/")
+  }
+}
