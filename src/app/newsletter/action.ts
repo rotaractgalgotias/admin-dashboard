@@ -1,7 +1,6 @@
 'use server'
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
-import { $Enums } from "@prisma/client"
 import slugify from "slugify"
 
 type Newsletter = {
