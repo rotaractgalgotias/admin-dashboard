@@ -5,7 +5,7 @@ import axios from "axios";
 import { revalidatePath } from "next/cache";
 
 export const publishAction = async () => {
-  const URL = `rotaractgalgotias.org/api/revalidate/all`;
+  const URL = `https://rotaractgalgotias.org/api/revalidate/all`;
 
   try {
     await axios.get(URL);
