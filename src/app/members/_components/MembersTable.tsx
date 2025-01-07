@@ -28,6 +28,13 @@ export default async function MembersTable() {
     },
     where: {
       verified: true,
+      roles: {
+        every: {
+          year: {
+            year: currentYear,
+          },
+        },
+      },
     },
   });
 
