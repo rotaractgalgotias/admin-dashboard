@@ -16,7 +16,6 @@ import { useUserStore } from "@/stores/userStore";
 import { toast } from "sonner";
 import { addNewsletter } from "../action";
 import { logAction } from "@/actions/logActions";
-import { useState } from "react";
 
 interface NewsletterFormValues {
   title: string;

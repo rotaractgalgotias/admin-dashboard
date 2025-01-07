@@ -14,9 +14,8 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
 import { toast } from "sonner";
-import { addNewsletter, editNewsletter } from "../action";
+import {  editNewsletter } from "../action";
 import { logAction } from "@/actions/logActions";
-import { useState } from "react";
 
 interface NewsletterFormValues {
     title: string;
