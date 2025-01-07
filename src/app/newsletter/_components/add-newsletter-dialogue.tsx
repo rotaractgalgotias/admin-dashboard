@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,32 +8,35 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Plus } from 'lucide-react'
-import { useRef } from "react"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
-export function AddNewsletterDialog() {
-  const router = useRouter()
-  const dialogRef = useRef<HTMLDialogElement>(null)
+interface NewsletterFormValues {
+  title: string;
+  totalPages: number;
+  month: string;
+}
 
-  async function handleSubmit(formData: FormData){
-    // await addNewsletter(formData)
-    console.log(formData)
-    router.refresh()
-    dialogRef.current?.close()
-  }
+export function AddNewsletterDialog({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<NewsletterFormValues>();
+
+  const onSubmit = (data: NewsletterFormValues) => {
+    console.log(data);
+    // Simulate API request or handle the form data
+    router.refresh();
+  };
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Newsletter
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Newsletter</DialogTitle>
@@ -41,23 +44,50 @@ export function AddNewsletterDialog() {
             Add a new newsletter to your collection.
           </DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="title" className="text-sm font-medium">
               Title
             </label>
-            <Input id="title" name="title" required />
+            <Input
+              id="title"
+              placeholder="Title of the newsletter"
+              {...register("title", { required: "Title is required" })}
+            />
+            {errors.title && (
+              <p className="text-red-500 text-sm">{errors.title.message}</p>
+            )}
           </div>
           <div className="space-y-2">
-            <label htmlFor="content" className="text-sm font-medium">
-              Content
+            <label htmlFor="totalPages" className="text-sm font-medium">
+              Total Pages
             </label>
-            <Textarea 
-              id="content" 
-              name="content" 
-              required 
-              className="min-h-[100px]"
+            <Input
+              id="totalPages"
+              type="number"
+              placeholder="10"
+              {...register("totalPages", {
+                required: "Total pages are required",
+                valueAsNumber: true,
+                min: { value: 1, message: "Minimum 1 page is required" },
+              })}
             />
+            {errors.totalPages && (
+              <p className="text-red-500 text-sm">{errors.totalPages.message}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="month" className="text-sm font-medium">
+              Month
+            </label>
+            <Input
+              id="month"
+              placeholder="jan-apr"
+              {...register("month", { required: "Month is required" })}
+            />
+            {errors.month && (
+              <p className="text-red-500 text-sm">{errors.month.message}</p>
+            )}
           </div>
           <div className="flex justify-end">
             <Button type="submit">Create Newsletter</Button>
@@ -65,6 +95,5 @@ export function AddNewsletterDialog() {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-

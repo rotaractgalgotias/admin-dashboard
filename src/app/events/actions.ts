@@ -5,10 +5,10 @@ import axios from "axios";
 import { revalidatePath } from "next/cache";
 
 export const publishAction = async () => {
-  const URL = `${process.env.DEPLOY_HOOK}?buildCache=false`;
+  const URL = `rotaractgalgotias.org/api/revalidate/all`;
 
   try {
-    await axios.post(URL);
+    await axios.get(URL);
     return { success: true, message: "Published successfully" };
   } catch (error) {
     console.error(error);

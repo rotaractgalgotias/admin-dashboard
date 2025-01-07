@@ -1,33 +1,57 @@
 'use server'
+import { prisma } from "@/lib/prisma"
+import { revalidatePath } from "next/cache"
+import { $Enums } from "@prisma/client"
+import slugify from "slugify"
 
 type Newsletter = {
-  id: string
+  totalPages: number
   title: string
-  content: string
-  createdAt: Date
-  status: 'draft' | 'published'
+  month: string
+  
 }
 
-// This is a mock database - replace with your actual database
-const newsletters: Newsletter[] = []
+export async function addNewsletter({
+  title,
+  totalPages,
+  month,
+}: Newsletter) {
+  try {
+    if(!title || !totalPages || !month) throw new Error("Please fill all fields")
 
-export async function addNewsletter(formData: FormData) {
-  const title = formData.get('title') as string
-  const content = formData.get('content') as string
-  
-  const newsletter = {
-    id: Math.random().toString(36).substring(7),
-    title,
-    content,
-    createdAt: new Date(),
-    status: 'draft' as const
+    const slug = slugify(title, { lower: true, strict: true })
+
+    const newsletterExists = await prisma.newsletter.findFirst({
+      where: { slug }
+    })
+
+    if(newsletterExists) throw new Error("Newsletter already exists")
+
+    const newsletter = await prisma.newsletter.create({
+      data: {
+        title,
+        totalPages,
+        month,
+        slug
+      }
+    })
+
+    return {
+      success: true,
+      message: "Newsletter added successfully",
+      data: newsletter
+    }
+
+    
+  } catch (error) {
+    console.error(error)
+    return { success: false, message: (error as Error).message ?? "An error occurred while adding the newsletter" }
+    
+  } finally {
+    revalidatePath("/newsletter")
+    revalidatePath("/")
   }
-  
-  newsletters.push(newsletter)
-  return { success: true }
+
 }
 
-export async function getNewsletters() {
-  return newsletters
-}
 

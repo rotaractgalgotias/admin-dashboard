@@ -140,3 +140,14 @@ enum Position {
   MANAGEMENT_TEAM_HEAD
   MEMBER
 }
+
+model Newsletter {
+  id         String   @id @default(cuid())
+  title      String
+  slug       String   @unique
+  published  Boolean  @default(false)
+  month      String
+  totalPages Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
