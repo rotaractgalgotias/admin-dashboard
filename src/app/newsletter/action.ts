@@ -86,12 +86,15 @@ export async function editNewsletter({
   try {
     if(!title || !totalPages || !month || !id) throw new Error("Please fill all fields")
 
+    const slug = slugify(title, { lower: true, strict: true })
+
     const newsletter = await prisma.newsletter.update({
       where: { id },
       data: {
         title,
         totalPages,
-        month
+        month,
+        slug
       }
     })
 
