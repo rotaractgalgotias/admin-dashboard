@@ -4,7 +4,9 @@ import { format } from "date-fns";
 import { AddNewsletterDialog } from "./_components/add-newsletter-dialogue";
 import { prisma } from "@/lib/prisma";
 import { EditNewsletterDialog } from "./_components/EditNewsletter";
+import { DeleteNewsletterDialog } from "./_components/DeleteNewsletter";
 
+export const revalidate = 60
 export default async function NewsletterPage() {
 
   const newsletters = await prisma.newsletter.findMany()
@@ -42,9 +44,11 @@ export default async function NewsletterPage() {
                       Edit
                     </Button>
                   </EditNewsletterDialog>
-                  <Button variant="ghost" size="sm" className="text-red-500">
-                    Delete
-                  </Button>
+                  <DeleteNewsletterDialog newsletter={newsletter}>
+                    <Button variant="ghost" size="sm" className="text-red-500">
+                      Delete
+                    </Button>
+                  </DeleteNewsletterDialog>
                 </TableCell>
               </TableRow>
             ))}
