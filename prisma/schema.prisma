@@ -153,6 +153,6 @@ model Newsletter {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  yearId     String
-  year       Year     @relation(fields: [yearId], references: [id], onDelete: Cascade)
+  yearId     String?
+  year       Year?    @relation(fields: [yearId], references: [id], onDelete: Cascade)
 }
