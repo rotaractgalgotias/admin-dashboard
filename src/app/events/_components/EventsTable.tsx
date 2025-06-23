@@ -34,6 +34,9 @@ export async function EventsTable({
         contains: searchParams.q as string,
         mode: "insensitive",
       },
+      year: {
+        year: Number(process.env.CURRENT_YEAR!),
+      },
     },
     orderBy: {
       date: "desc",
