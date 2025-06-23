@@ -1,15 +1,28 @@
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { format } from "date-fns";
 import { AddNewsletterDialog } from "./_components/add-newsletter-dialogue";
 import { prisma } from "@/lib/prisma";
 import { EditNewsletterDialog } from "./_components/EditNewsletter";
 import { DeleteNewsletterDialog } from "./_components/DeleteNewsletter";
+import { currentYear } from "@/lib/utils";
 
-export const revalidate = 60
+export const revalidate = 60;
 export default async function NewsletterPage() {
-
-  const newsletters = await prisma.newsletter.findMany()
+  const newsletters = await prisma.newsletter.findMany({
+    where: {
+      year: {
+        year: currentYear,
+      },
+    },
+  });
 
   return (
     <div className="p-6 space-y-6">
@@ -37,7 +50,9 @@ export default async function NewsletterPage() {
                 <TableCell>{newsletter.title}</TableCell>
                 <TableCell>{newsletter.month}</TableCell>
                 <TableCell>{newsletter.totalPages}</TableCell>
-                <TableCell>{format(newsletter.createdAt, "MMM dd, yyyy")}</TableCell>
+                <TableCell>
+                  {format(newsletter.createdAt, "MMM dd, yyyy")}
+                </TableCell>
                 <TableCell>
                   <EditNewsletterDialog newsletter={newsletter}>
                     <Button variant="ghost" size="sm">
@@ -54,7 +69,10 @@ export default async function NewsletterPage() {
             ))}
             {newsletters.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="text-center text-muted-foreground"
+                >
                   No newsletters found. Create one to get started.
                 </TableCell>
               </TableRow>

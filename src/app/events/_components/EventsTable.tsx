@@ -22,6 +22,7 @@ import Link from "next/link";
 import DeleteBtn from "./DeleteBtn";
 import Image from "next/image";
 import DateComp from "./DateComp";
+import { currentYear } from "@/lib/utils";
 
 export async function EventsTable({
   searchParams,
@@ -35,7 +36,7 @@ export async function EventsTable({
         mode: "insensitive",
       },
       year: {
-        year: Number(process.env.CURRENT_YEAR!),
+        year: currentYear,
       },
     },
     orderBy: {
