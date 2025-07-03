@@ -4,7 +4,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -64,6 +65,7 @@ model Year {
 
   events  Event[]  // Related events for this year
   roles   MemberRole[] // Related member roles for this year
+  newsletters Newsletter[] // Related newsletters for this year
 }
 
 model Member {
@@ -152,4 +154,7 @@ model Newsletter {
   pdfUrl     String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  yearId     String?
+  year       Year?    @relation(fields: [yearId], references: [id], onDelete: Cascade)
 }
