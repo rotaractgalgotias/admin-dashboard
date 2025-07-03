@@ -25,8 +25,10 @@ import { UserPlusIcon } from "lucide-react";
 import { MemberType, Position, $Enums } from "@prisma/client";
 import {
   councilPositions,
-  directorAndCoordinatorPositions,
   memberTypes,
+  domainPositions,
+  domainNames,
+  getDomainKeys,
 } from "../../../utils/positions";
 import { toast } from "sonner";
 import { createMember } from "../actions";
@@ -37,6 +39,7 @@ const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   imageUrl: z.string().url("Invalid URL"),
   memberType: z.nativeEnum(MemberType).nullable(),
+  domain: z.string().nullable(),
   position: z.nativeEnum(Position).nullable(),
 });
 
@@ -46,6 +49,7 @@ export default function AddMemberDialog() {
   const [open, setOpen] = useState(false);
   const [availablePositions, setAvailablePositions] = useState<Position[]>([]);
   const [showPositionSelect, setShowPositionSelect] = useState(false);
+  const [showDomainSelect, setShowDomainSelect] = useState(false);
   const { user } = useUserStore();
 
   const {
@@ -61,36 +65,53 @@ export default function AddMemberDialog() {
       name: "",
       imageUrl: "",
       memberType: undefined,
+      domain: undefined,
       position: undefined,
     },
   });
 
   const memberType = watch("memberType");
+  const domain = watch("domain");
 
   useEffect(() => {
     switch (memberType) {
       case MemberType.COUNCIL:
         setAvailablePositions(councilPositions);
         setShowPositionSelect(true);
+        setShowDomainSelect(false);
         break;
       case MemberType.DIRECTOR:
       case MemberType.COORDINATOR:
-        setAvailablePositions(directorAndCoordinatorPositions);
-        setShowPositionSelect(true);
+        setShowDomainSelect(true);
+        setShowPositionSelect(false);
+        setAvailablePositions([]);
         break;
       case MemberType.MEMBER:
         setAvailablePositions([Position.MEMBER]);
         setShowPositionSelect(false);
+        setShowDomainSelect(false);
         setValue("position", Position.MEMBER);
         break;
       default:
         setAvailablePositions([]);
         setShowPositionSelect(false);
+        setShowDomainSelect(false);
     }
     if (memberType !== MemberType.MEMBER) {
       setValue("position", null);
     }
+    setValue("domain", null);
   }, [memberType, setValue]);
+
+  useEffect(() => {
+    if (domain && (memberType === MemberType.DIRECTOR || memberType === MemberType.COORDINATOR)) {
+      const domainPositionsList = domainPositions[domain as keyof typeof domainPositions];
+      if (domainPositionsList) {
+        setAvailablePositions(domainPositionsList);
+        setShowPositionSelect(true);
+      }
+    }
+  }, [domain, memberType]);
 
   const onSubmit = async (data: FormData) => {
     if (user?.role !== "ADMIN") {
@@ -99,8 +120,8 @@ export default function AddMemberDialog() {
     const toastId = toast.loading("Adding member...");
     try {
       const res = await createMember({
-        name: data.name,
-        imageUrl: data.imageUrl,
+        name: data.name as string,
+        imageUrl: data.imageUrl as string,
         memberType: data.memberType as $Enums.MemberType,
         position: data.position as $Enums.Position,
       });
@@ -185,6 +206,37 @@ export default function AddMemberDialog() {
               </p>
             )}
           </div>
+          {showDomainSelect && (
+            <div className="grid gap-2">
+              <Label htmlFor="domain">Domain</Label>
+              <Controller
+                name="domain"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value ?? undefined}
+                  >
+                    <SelectTrigger id="domain">
+                      <SelectValue placeholder="Select domain" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {getDomainKeys().map((domainKey) => (
+                        <SelectItem key={domainKey} value={domainKey}>
+                          {domainNames[domainKey]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.domain && (
+                <p className="text-sm text-red-500">
+                  {errors.domain.message}
+                </p>
+              )}
+            </div>
+          )}
           {showPositionSelect && (
             <div className="grid gap-2">
               <Label htmlFor="position">Position</Label>

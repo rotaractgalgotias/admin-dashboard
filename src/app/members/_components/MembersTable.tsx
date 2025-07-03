@@ -50,8 +50,8 @@ export default async function MembersTable() {
       b.roles[0].memberType === "COUNCIL"
     ) {
       return (
-        allPositions.indexOf(a.roles[0]?.position as Position) -
-        allPositions.indexOf(b.roles[0]?.position as Position)
+        allPositions.indexOf(a.roles[0]?.position as unknown as Position) -
+        allPositions.indexOf(b.roles[0]?.position as unknown as Position)
       );
     }
 
