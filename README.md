@@ -59,3 +59,4 @@ docker-compose up -d
 ### 6. Access the Application
 
 Open your browser and navigate to `http://localhost:3000` to see the application running.
+NOICE
