@@ -20,12 +20,12 @@ export const directorAndCoordinatorPositions = [
   Position.MANAGEMENT_TEAM_HEAD,
   Position.PROFESSIONAL_DEVELOPMENT,
   Position.PERFORMING_ARTS_HEAD,
-  Position.SOCIAL_MEDIA,
+  Position.SOCIAL_MEDIA,  
+  Position.MEDIA_SERVICE,
   Position.TECHNICAL_SERVICES,
 ];
 
 export const allPositions: Position[] = [
-  ...councilPositions,
   ...directorAndCoordinatorPositions,
   Position.MEMBER,
 ];
@@ -48,6 +48,7 @@ export const domainPositions = {
   PROFESSIONAL_DEVELOPMENT: [Position.PROFESSIONAL_DEVELOPMENT],
   PERFORMING_ARTS: [Position.PERFORMING_ARTS_HEAD],
   SOCIAL_MEDIA_SERVICES: [Position.SOCIAL_MEDIA],
+  MEDIA_SERVICES: [Position.MEDIA_SERVICE],
   TECHNICAL_SERVICES: [Position.TECHNICAL_SERVICES],
 };
 
@@ -60,7 +61,8 @@ export const domainNames = {
   MANAGEMENT_SERVICES: "Management Services",
   PROFESSIONAL_DEVELOPMENT: "Professional Development",
   PERFORMING_ARTS: "Performing Arts",
-  SOCIAL_MEDIA_SERVICES: "Media Services",
+  SOCIAL_MEDIA_SERVICES: "Social Media Services",
+  MEDIA_SERVICES: "Media Services",
   TECHNICAL_SERVICES: "Technical Services",
 };
 
