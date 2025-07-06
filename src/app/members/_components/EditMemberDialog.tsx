@@ -29,6 +29,7 @@ import {
   domainPositions,
   domainNames,
   getDomainKeys,
+  directorAndCoordinatorPositions,
 } from "../../../utils/positions";
 import { toast } from "sonner";
 import { updateMember } from "../actions";
@@ -99,6 +100,16 @@ export default function EditMemberDialog({
         setShowPositionSelect(false);
         setShowDomainSelect(false);
         setValue("position", Position.MEMBER);
+        break;
+      case MemberType.DIRECTOR:
+        setAvailablePositions(directorAndCoordinatorPositions);
+        setShowPositionSelect(true);
+        setShowDomainSelect(true);
+        break;
+      case MemberType.COORDINATOR:
+        setAvailablePositions(directorAndCoordinatorPositions);
+        setShowPositionSelect(true);
+        setShowDomainSelect(true);
         break;
       default:
         setAvailablePositions([]);
