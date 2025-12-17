@@ -1,8 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
-import { NextResponse } from "next/server";
+
 const ai = new GoogleGenAI({});
-export async function POST(request: Request) {
-    const { text } = await request.json();
+
+export async function generateMdxFromText(text: string): Promise<{
+    mdxContent: string;
+}> {
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         config: {
@@ -42,16 +44,17 @@ ${text}
 
     const textResponse = response.text;
 
-    // Clean potential markdown fences just in case
-    const cleanText = textResponse?.replace(/```json\n?|```/g, '').trim() || "{}";
+    // Clean markdown fences just in case
+    const cleanText =
+        textResponse?.replace(/```json\n?|```/g, "").trim() || "{}";
 
     try {
-        const jsonResponse = JSON.parse(cleanText);
-        return NextResponse.json(jsonResponse);
+        return JSON.parse(cleanText);
     } catch (error) {
         console.error("JSON Parsing Error:", error);
-        return NextResponse.json({
-            mdxContent: textResponse  // Fallback to raw text if parsing fails
-        });
+
+        return {
+            mdxContent: textResponse ?? "",
+        };
     }
 }

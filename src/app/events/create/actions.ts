@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import slugify from "slugify";
 import axios from "axios";
 import { currentYear } from "@/lib/utils";
+import { generateMdxFromText } from "@/lib/mdxGenerator";
 
 export const createEvent = async (event: {
   title: string;
@@ -34,18 +35,13 @@ export const createEvent = async (event: {
 
     const coverImage = event.coverImage ?? "";
 
-    const mdxContent = await axios.post(
-      "/api/mdx/convert",
-      {
-        text: event.content,
-      }
-    );
+    const mdxContent = await generateMdxFromText(event.content);
 
     await prisma.event.create({
       data: {
         slug,
         title: event.title,
-        content: mdxContent.data.mdxContent,
+        content: mdxContent.mdxContent,
         description: event.description,
         date: event.date,
         location: event.location,

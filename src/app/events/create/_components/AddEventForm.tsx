@@ -45,7 +45,7 @@ const eventSchema = z.object({
   numberOfVolunteers: z.number().min(0).optional(),
   peopleImpacted: z.number().min(0).optional(),
   duration: z.number().min(0).optional(),
-  coverImage: z.string().url("Invalid URL"),
+  coverImage: z.string().trim().url("Invalid URL"),
   featured: z.boolean(),
 });
 
