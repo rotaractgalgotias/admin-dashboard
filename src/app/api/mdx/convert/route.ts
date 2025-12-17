@@ -1,4 +1,3 @@
-import axios from "axios";
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 const ai = new GoogleGenAI({});
