@@ -37,7 +37,7 @@
     "date-fns": "^3.6.0",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.453.0",
-    "next": "15.0.1",
+    "next": "16.0.10",
     "next-auth": "5.0.0-beta.25",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^3.7.15",
