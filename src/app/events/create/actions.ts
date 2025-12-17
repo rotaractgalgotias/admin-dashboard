@@ -35,7 +35,7 @@ export const createEvent = async (event: {
     const coverImage = event.coverImage ?? "";
 
     const mdxContent = await axios.post(
-      "https://www.text2mdx.com/api/convert",
+      "/api/mdx/convert",
       {
         text: event.content,
       }
@@ -64,7 +64,6 @@ export const createEvent = async (event: {
 
     revalidatePath("/events"); // Revalidate the events page after creating an event
     revalidatePath("/");
-
     return {
       success: true,
       message: "Event created successfully",
