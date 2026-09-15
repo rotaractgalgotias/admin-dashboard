@@ -9,6 +9,22 @@ import {
 import { revalidatePath } from "next/cache";
 import { currentYear } from "@/lib/utils";
 
+/**
+ * Triggers a full cache revalidation on the public website.
+ * This is needed because the admin dashboard and the website are separate
+ * Next.js apps, so revalidatePath() only affects the admin's own cache.
+ */
+async function revalidateWebsite() {
+  const websiteUrl = process.env.WEBSITE_URL;
+  if (!websiteUrl) return;
+  try {
+    await fetch(`${websiteUrl}/api/revalidate/all`, { cache: "no-store" });
+  } catch (err) {
+    // Non-fatal: website revalidation failed (e.g. website is down)
+    console.warn("Failed to revalidate website cache:", err);
+  }
+}
+
 export async function createMember(data: {
   name: string;
   position: $Enums.Position;
@@ -65,6 +81,7 @@ export async function createMember(data: {
     });
 
     revalidatePath("/members");
+    await revalidateWebsite();
     return {
       success: true,
       message: "Member created successfully",
@@ -157,6 +174,7 @@ export const updateMember = async ({
     });
 
     revalidatePath("/members");
+    await revalidateWebsite();
     return {
       success: true,
       message: "Member updated successfully",
@@ -180,6 +198,7 @@ export const deleteMember = async (id: string) => {
     });
 
     revalidatePath("/members");
+    await revalidateWebsite();
     return {
       success: true,
       message: "Member deleted successfully",
